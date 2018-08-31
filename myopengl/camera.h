@@ -10,7 +10,9 @@ enum Camera_Movement {
 	FORWARD,
 	BACKWARD,
 	LEFT,
-	RIGHT
+	RIGHT,
+	PGUP,
+	PGDOWN
 };
 
 const float YAW = -90.0f;
@@ -29,6 +31,7 @@ public:
 	glm::vec3 Up;
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
+
 	//Euler Angles
 	float Yaw;
 	float Pitch;
@@ -96,6 +99,11 @@ public:
 		  if (direction == RIGHT)
 			  Position += Right * velocity;
 		  //Position.y = 0.0;
+		  if (direction == PGUP)
+			  Position += Up * velocity;
+		  if (direction == PGDOWN)
+			  Position -= Up * velocity;
+		  
 	  }
 
 	  // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
