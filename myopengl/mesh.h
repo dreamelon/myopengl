@@ -54,11 +54,12 @@ public:
 		unsigned int specularNr = 1;
 		unsigned int normalNr = 1;
 		unsigned int heightNr = 1;
+		unsigned int reflectNr = 1;
 
 		for (unsigned int i = 0; i < textures.size(); i++) {
 			//激活相应的纹理单元
 			glActiveTexture(GL_TEXTURE0 + i);
-			//获取纹理序号(diffuse_textureN中的N
+			//获取纹理序号(diffuse_textureN中的N)
 			string number;
 			string name = textures[i].type;
 			if (name == "texture_diffuse")
@@ -69,11 +70,13 @@ public:
 				number = std::to_string(normalNr++);
 			else if (name == "texture_height")
 				number = std::to_string(heightNr++);
-			
-			shader.setInt(("material." + name + number).c_str(), i);
+			else if (name == "texture_reflection")
+				number = std::to_string(reflectNr++);
+
+			shader.use();
+			shader.setInt(name + number, i);
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
-		
 		//绘制网格
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
