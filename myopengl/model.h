@@ -84,7 +84,7 @@ private:
 			if (mesh->mBitangents) {
 				vector.x = mesh->mBitangents[i].x;
 				vector.y = mesh->mBitangents[i].y;
-				vector.z = mesh->mBitangents[i].z;
+				vector.z = mesh->mBitangents[i].z ;
 				vertex.Bitangent = vector;
 			}
 			vertices.push_back(vertex);

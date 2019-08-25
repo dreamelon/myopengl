@@ -39,7 +39,7 @@ public:
 	float MovementSpeed;
 	float MouseSensitivity;
 	float Zoom;
-
+	 
 	//¹¹Ôìº¯Êý
 	 Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)
 		:Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
@@ -103,7 +103,6 @@ public:
 			  Position += Up * velocity;
 		  if (direction == PGDOWN)
 			  Position -= Up * velocity;
-		  
 	  }
 
 	  // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

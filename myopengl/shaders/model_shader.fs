@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+ #version 330 core
+=======
 #version 330 core
+>>>>>>> f4fdc2381dc4ac8f19c88df4c1927d10c6a39a8d
 out vec4 FragColor;
 
 in VS_OUT{
@@ -14,8 +18,12 @@ uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 
 void main()
+<<<<<<< HEAD
+{    
+=======
 {   
 	//vec2 TexCoords = vec2(gl_FragCoord.x/800, gl_FragCoord.y/600);
+>>>>>>> f4fdc2381dc4ac8f19c88df4c1927d10c6a39a8d
     vec3 normal = texture(texture_normal1, fs_in.TexCoords).rgb;
     normal = normalize(normal * 2.0 - 1.0);
 
@@ -26,7 +34,11 @@ void main()
 	//diffuse
 	vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
+<<<<<<< HEAD
+	vec3 diffuse = diff * diffuseColor;
+=======
 	vec3 diffuse = diff * diffuseColor * 0.5;
+>>>>>>> f4fdc2381dc4ac8f19c88df4c1927d10c6a39a8d
 	//specular
     //vec3 specularColor = texture(texture_specular1, fs_in.TexCoords).rgb;
 	vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
