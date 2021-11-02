@@ -1,121 +1,111 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
+    <Filter Include="SourceFiles">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="头文件">
+    <Filter Include="SourceFiles\UI">
+      <UniqueIdentifier>{dd9f8a4f-e9b8-4ef9-a5e1-5b68d4dab4ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\Texture">
+      <UniqueIdentifier>{f33404ca-d5e8-4551-8dce-731300272052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeadFiles">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="资源文件">
+    <Filter Include="HeadFiles\Camera">
+      <UniqueIdentifier>{fe3e7451-902d-4028-8456-6ac87fbecd09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeadFiles\UI">
+      <UniqueIdentifier>{ee0ff552-ce33-496f-94d9-626efb66b311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeadFiles\Model">
+      <UniqueIdentifier>{83089fff-d4a1-4c2f-aa2c-12409e05d0a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeadFiles\Time">
+      <UniqueIdentifier>{6b251e62-af10-4842-a45f-be8f13554cdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeadFiles\Texture">
+      <UniqueIdentifier>{fe2b1423-e9dd-4e25-b93b-2b45e2922ae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceFiles">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\Camera">
-      <UniqueIdentifier>{fe3e7451-902d-4028-8456-6ac87fbecd09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\UI">
-      <UniqueIdentifier>{ee0ff552-ce33-496f-94d9-626efb66b311}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Model">
-      <UniqueIdentifier>{83089fff-d4a1-4c2f-aa2c-12409e05d0a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Time">
-      <UniqueIdentifier>{6b251e62-af10-4842-a45f-be8f13554cdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\UI">
-      <UniqueIdentifier>{dd9f8a4f-e9b8-4ef9-a5e1-5b68d4dab4ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Texture">
-      <UniqueIdentifier>{f33404ca-d5e8-4551-8dce-731300272052}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Texture">
-      <UniqueIdentifier>{fe2b1423-e9dd-4e25-b93b-2b45e2922ae7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>头文件</Filter>
+      <Filter>HeadFiles</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>头文件\Camera</Filter>
+      <Filter>HeadFiles\Camera</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imgui.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_glfw.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_opengl3.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imstb_textedit.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
-      <Filter>头文件\UI</Filter>
+      <Filter>HeadFiles\UI</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
-      <Filter>头文件\Model</Filter>
+      <Filter>HeadFiles\Model</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>头文件\Model</Filter>
+      <Filter>HeadFiles\Model</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>头文件\Texture</Filter>
+      <Filter>HeadFiles\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\glad\glad.h">
+      <Filter>HeadFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="myopengl.cpp">
-      <Filter>源文件</Filter>
+      <Filter>SourceFiles</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
-      <Filter>源文件</Filter>
+      <Filter>SourceFiles</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>源文件\UI</Filter>
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
-      <Filter>源文件\UI</Filter>
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>源文件\UI</Filter>
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_glfw.cpp">
-      <Filter>源文件\UI</Filter>
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_opengl3.cpp">
-      <Filter>源文件\UI</Filter>
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
-      <Filter>源文件\UI</Filter>
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
-      <Filter>源文件\Texture</Filter>
+      <Filter>SourceFiles\Texture</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram2.cd" />
-    <None Include="ClassDiagram21.cd" />
   </ItemGroup>
 </Project>
