@@ -109,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\glad\glad.h" />
+    <ClInclude Include="application.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -167,8 +169,10 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="application.cpp" />
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -188,10 +192,65 @@
     <ClCompile Include="imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="myopengl.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="stb_image.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\background.fs" />
+    <None Include="shaders\background.vs" />
+    <None Include="shaders\blinn-phong.fs" />
+    <None Include="shaders\blinn-phong.vs" />
+    <None Include="shaders\brdf.fs" />
+    <None Include="shaders\brdf.vs" />
+    <None Include="shaders\cubeMap.vs" />
+    <None Include="shaders\cubeshader.f" />
+    <None Include="shaders\cubeshader.v" />
+    <None Include="shaders\dragonshader.fs" />
+    <None Include="shaders\dragonshader.vs" />
+    <None Include="shaders\equirectangular_to_cubeMap.fs" />
+    <None Include="shaders\frameshader.fs" />
+    <None Include="shaders\frameshader.vs" />
+    <None Include="shaders\Gshader.fs" />
+    <None Include="shaders\Gshader.vs" />
+    <None Include="shaders\irradiance_convolution.fs" />
+    <None Include="shaders\lampshader.fs" />
+    <None Include="shaders\lampshader.vs" />
+    <None Include="shaders\model_shader.f" />
+    <None Include="shaders\model_shader.fs" />
+    <None Include="shaders\model_shader.vs" />
+    <None Include="shaders\normap.fs" />
+    <None Include="shaders\normap.vs" />
+    <None Include="shaders\normap1.vs" />
+    <None Include="shaders\pbrshader-1.fs" />
+    <None Include="shaders\pbrshader-2.fs" />
+    <None Include="shaders\pbrshader.fs" />
+    <None Include="shaders\pbrshader.vs" />
+    <None Include="shaders\prefilter.fs" />
+    <None Include="shaders\quadshader.f" />
+    <None Include="shaders\quadshader.fs" />
+    <None Include="shaders\quadshader.v" />
+    <None Include="shaders\quadshader.vs" />
+    <None Include="shaders\reflectshader.fs" />
+    <None Include="shaders\reflectshader.vs" />
+    <None Include="shaders\refractshader.fs" />
+    <None Include="shaders\refractshader.vs" />
+    <None Include="shaders\shader.fs" />
+    <None Include="shaders\shader.vs~f4fdc2381dc4ac8f19c88df4c1927d10c6a39a8d" />
+    <None Include="shaders\shader.vs~HEAD" />
+    <None Include="shaders\shadowmap.f" />
+    <None Include="shaders\shadowmap.v" />
+    <None Include="shaders\simpleDepthShader.f" />
+    <None Include="shaders\simpleDepthShader.v" />
+    <None Include="shaders\skyboxshader.f" />
+    <None Include="shaders\skyboxshader.fs" />
+    <None Include="shaders\skyboxshader.v" />
+    <None Include="shaders\skyboxshader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

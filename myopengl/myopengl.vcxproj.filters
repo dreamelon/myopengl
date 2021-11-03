@@ -34,6 +34,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="SourceFiles\Shaders">
+      <UniqueIdentifier>{3c6a5cbf-8843-4192-ae07-7f2b2eeb67c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
@@ -78,6 +81,12 @@
     <ClInclude Include="..\include\glad\glad.h">
       <Filter>HeadFiles</Filter>
     </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>HeadFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>HeadFiles\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myopengl.cpp">
@@ -107,5 +116,169 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>SourceFiles\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\background.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\background.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\blinn-phong.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\blinn-phong.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\cubeMap.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\cubeshader.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\cubeshader.v">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\dragonshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\dragonshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\equirectangular_to_cubeMap.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\frameshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\frameshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\Gshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\Gshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\irradiance_convolution.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\lampshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\lampshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\model_shader.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\model_shader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\model_shader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\normap.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\normap.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\normap1.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\pbrshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\pbrshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\pbrshader-1.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\pbrshader-2.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\prefilter.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\quadshader.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\quadshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\quadshader.v">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\quadshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\reflectshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\reflectshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\refractshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\refractshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shader.vs~f4fdc2381dc4ac8f19c88df4c1927d10c6a39a8d">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shader.vs~HEAD">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shadowmap.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shadowmap.v">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\simpleDepthShader.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\simpleDepthShader.v">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\skyboxshader.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\skyboxshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\skyboxshader.v">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\skyboxshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
