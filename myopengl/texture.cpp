@@ -13,8 +13,8 @@ Texture::Texture(char const* path, bool gammaCorrection)
     unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
     if (data)
     {
-        GLenum internalFormat;
-        GLenum dataFormat;
+        GLenum internalFormat = GL_RED;
+        GLenum dataFormat = GL_RED;
         if (nrComponents == 1) {
             internalFormat = GL_RED;
             dataFormat = GL_RED;

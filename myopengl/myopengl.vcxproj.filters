@@ -45,30 +45,6 @@
     <ClInclude Include="camera.h">
       <Filter>HeadFiles\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_glfw.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_opengl3.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_rectpack.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_textedit.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>HeadFiles\UI</Filter>
-    </ClInclude>
     <ClInclude Include="model.h">
       <Filter>HeadFiles\Model</Filter>
     </ClInclude>
@@ -110,9 +86,6 @@
     <ClCompile Include="imgui_impl_opengl3.cpp">
       <Filter>SourceFiles\UI</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>SourceFiles\UI</Filter>
-    </ClCompile>
     <ClCompile Include="stb_image.cpp">
       <Filter>SourceFiles\Texture</Filter>
     </ClCompile>
@@ -129,6 +102,9 @@
       <Filter>SourceFiles</Filter>
     </ClCompile>
     <ClCompile Include="shader.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
   </ItemGroup>

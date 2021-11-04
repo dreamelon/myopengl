@@ -5,33 +5,39 @@
 #include "model.h"
 
 class Application {
-private:
-    // settings
-    const unsigned int SCR_WIDTH = 1280;
-    const unsigned int SCR_HEIGHT = 720;
 
-    // camera
-    Camera camera;
-    float lastX = SCR_WIDTH / 2.0f;
-    float lastY = SCR_HEIGHT / 2.0f;
+private:
+    // Window
+    const unsigned int wndWidth = 1280;
+    const unsigned int wndHeight = 720;
+    GLFWwindow* window;
+
+    // Camera
+    static Camera camera;
+
+    // Input
+    float lastX = wndWidth / 2.0f;
+    float lastY = wndHeight / 2.0f;
     bool firstMouse = true;
 
     // timing
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-    bool enterWindowFlag = true;
 
-    int item_current = 0;
-    int item = 0;
-
-    int lightopen = 0;
-
-    bool showMonitor = true;
 
     double uixpos, uiypos;
 
-    GLFWwindow* window;
+    // GUI
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    bool enterWindowFlag = true;
+    int item_current = 0;
+    int item = 0;
+    int lightON = 0;
+    bool showMonitor = true;
 
 private:
     glm::mat4 view;
@@ -46,8 +52,9 @@ public:
     bool InitializeWindow();
     bool InitGLAD();
     bool InitScene();
+    void SetOpenGLState();
 
-    int Run();
+    void Run();
 
     void RenderGUI();
 
@@ -60,9 +67,10 @@ public:
 
 public:
     // Input
+    void processInput(GLFWwindow* window);
+
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-    static void processInput(GLFWwindow* window);
     static void cursor_callback(GLFWwindow* window, int flag);
 };

@@ -24,26 +24,6 @@ void Application::processInput(GLFWwindow* window)
         camera.ProcessKeyboard(PGUP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         camera.ProcessKeyboard(PGDOWN, deltaTime);
-
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !hdrKeyPressed)
-    {
-        hdr = !hdr;
-        hdrKeyPressed = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
-        hdrKeyPressed = false;
-    }
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-    {
-        if (exposure > 0.0f)
-            exposure -= 0.01f;
-        else
-            exposure = 0.0f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-    {
-        exposure += 0.01f;
-    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -97,7 +77,7 @@ bool Application::InitializeWindow() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // glfw window creation
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    window = glfwCreateWindow(wndWidth, wndHeight, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -135,85 +115,6 @@ bool Application::Init() {
         return false;
 
     return true;
-}
-
-void Application::RenderGUI() {
-    // Start the Dear ImGui frame
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    //if (show_demo_window)
-    //ImGui::ShowDemoWindow(&show_demo_window);
-
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-    {
-        static float f = 0.0f;
-        static int counter = 0;
-
-        ImGui::Begin("Panel");
-        ShowMonitor(&showMonitor);
-        ImGui::RadioButton("directlight", &lightopen, 0);
-        ImGui::SameLine();
-        ImGui::RadioButton("ambient", &lightopen, 1);
-
-        //ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        //ImGui::Checkbox("Another Window", &show_another_window);
-
-        //ImGui::SliderFloat("viewField", &viewField, 0.0f, 90.0f, "viewField = %.3f");
-        ImGui::SliderFloat("VIEWFIELD", &camera.Zoom, 0.0f, 90.0f, "viewField = %.3f");
-
-        ImGui::Separator();
-
-        ImGui::SliderFloat("Roughness", &Roughness, 0.0f, 1.0f, "Roughness = %.3f");
-        ImGui::SliderFloat("Ao", &Ao, 0.0f, 1.0f, "Ao = %.3f");
-        ImGui::SliderFloat("Metallic", &Metallic, 0.0f, 1.0f, "Metallic = %.3f");
-        ImGui::ColorEdit3("Albedo", (float*)&Albedo); // Edit 3 floats representing a color
-
-        ImGui::Separator();
-
-        {
-            const char* items[] = {
-                "gold",
-                "grass",
-                "plastic",
-                "wall",
-            };
-            ImGui::Combo("Material", &item_current, items, IM_ARRAYSIZE(items));
-        }
-
-        ImGui::Separator();
-
-        {
-            const char* items[] = {
-                "dragon",
-                "sphere",
-                "cube"
-            };
-            ImGui::Combo("OBJ", &item, items, IM_ARRAYSIZE(items));
-        }
-
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-        if (uixpos < ((double)ImGui::GetWindowPos().x + (double)ImGui::GetWindowSize().x) && uixpos > ImGui::GetWindowPos().x && uiypos < ((double)ImGui::GetWindowPos().y + (double)ImGui::GetWindowSize().y) && uiypos > ImGui::GetWindowPos().y) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            enterWindowFlag = false;
-        }
-
-        else
-        {
-            enterWindowFlag = true;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-            //std::cout << "uixpos  " << uixpos << "\n" << "uiypos  " << uiypos << std::endl;
-        }
-        ImGui::End();
-    }
 }
 
 bool Application::InitScene(){
@@ -309,6 +210,85 @@ void Application::SetupGUI() {
     ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
+void Application::RenderGUI() {
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    //if (show_demo_window)
+    //ImGui::ShowDemoWindow(&show_demo_window);
+
+    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+    {
+        static float f = 0.0f;
+        static int counter = 0;
+
+        ImGui::Begin("Panel");
+        ShowMonitor(&showMonitor);
+        ImGui::RadioButton("directlight", &lightON, 0);
+        ImGui::SameLine();
+        ImGui::RadioButton("ambient", &lightON, 1);
+
+        //ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+        //ImGui::Checkbox("Another Window", &show_another_window);
+
+        //ImGui::SliderFloat("viewField", &viewField, 0.0f, 90.0f, "viewField = %.3f");
+        ImGui::SliderFloat("VIEWFIELD", &camera.Zoom, 0.0f, 90.0f, "viewField = %.3f");
+
+        ImGui::Separator();
+
+        ImGui::SliderFloat("Roughness", &Roughness, 0.0f, 1.0f, "Roughness = %.3f");
+        ImGui::SliderFloat("Ao", &Ao, 0.0f, 1.0f, "Ao = %.3f");
+        ImGui::SliderFloat("Metallic", &Metallic, 0.0f, 1.0f, "Metallic = %.3f");
+        ImGui::ColorEdit3("Albedo", (float*)&Albedo); // Edit 3 floats representing a color
+
+        ImGui::Separator();
+
+        {
+            const char* items[] = {
+                "gold",
+                "grass",
+                "plastic",
+                "wall",
+            };
+            ImGui::Combo("Material", &item_current, items, IM_ARRAYSIZE(items));
+        }
+
+        ImGui::Separator();
+
+        {
+            const char* items[] = {
+                "dragon",
+                "sphere",
+                "cube"
+            };
+            ImGui::Combo("OBJ", &item, items, IM_ARRAYSIZE(items));
+        }
+
+        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            counter++;
+        ImGui::SameLine();
+        ImGui::Text("counter = %d", counter);
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+        if (uixpos < ((double)ImGui::GetWindowPos().x + (double)ImGui::GetWindowSize().x) && uixpos > ImGui::GetWindowPos().x && uiypos < ((double)ImGui::GetWindowPos().y + (double)ImGui::GetWindowSize().y) && uiypos > ImGui::GetWindowPos().y) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            enterWindowFlag = false;
+        }
+
+        else
+        {
+            enterWindowFlag = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            //std::cout << "uixpos  " << uixpos << "\n" << "uiypos  " << uiypos << std::endl;
+        }
+        ImGui::End();
+    }
+}
+
 void Application::ShowMonitor(bool* p_open)
 {
     const float DISTANCE = 10.0f;
@@ -348,4 +328,163 @@ void Application::ShowMonitor(bool* p_open)
         }
         ImGui::End();
     }
+}
+
+void Application::Run() {
+    // render loop
+    // -----------
+    double lastTime = glfwGetTime();
+    int frames = 0;
+    while (!glfwWindowShouldClose(window))
+    {
+        // per-frame time logic
+        // --------------------
+
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        // input
+        // -----
+        processInput(window);
+
+        // render
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        glfwGetCursorPos(window, &uixpos, &uiypos);
+
+
+        // initialize static shader uniforms 
+        // --------------------------------------------------
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 100.0f);
+        ourShader.use();
+        ourShader.setMat4("projection", projection);
+        backgroundShader.use();
+        backgroundShader.setMat4("projection", projection);
+        pbrShader.use();
+        pbrShader.setMat4("projection", projection);
+        reflectionShader.use();
+        reflectionShader.setMat4("projection", projection);
+        refractionShader.use();
+        refractionShader.setMat4("projection", projection);
+
+        glm::mat4 view = camera.GetViewMatrix();
+        ourShader.use();
+        ourShader.setMat4("view", view);
+        ourShader.setVec3("viewPos", camera.Position);
+
+        pbrShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+
+        ourShader.use();
+        glActiveTexture(GL_TEXTURE8);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+
+        //iron
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, albedo);
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, normal);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, metallic);
+        glActiveTexture(GL_TEXTURE6);
+        glBindTexture(GL_TEXTURE_2D, roughness);
+        glActiveTexture(GL_TEXTURE7);
+        glBindTexture(GL_TEXTURE_2D, ao);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-5.0, 0.0, 2.0));
+        //ourShader.setMat4("model", model);
+        refractionShader.use();
+        refractionShader.setMat4("model", model);
+        refractionShader.setMat4("view", view);
+        refractionShader.setVec3("cameraPos", camera.Position);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+        /*ourModel.Draw(refractionShader);*/
+
+        // wall
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, wallAlbedoMap);
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, wallNormalMap);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, wallMetallicMap);
+        glActiveTexture(GL_TEXTURE6);
+        glBindTexture(GL_TEXTURE_2D, wallRoughnessMap);
+        glActiveTexture(GL_TEXTURE7);
+        glBindTexture(GL_TEXTURE_2D, wallAOMap);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3.0, 0.0, 2.0));
+
+        pbrShader.use();
+        pbrShader.setMat4("model", model);
+        pbrShader.setMat4("view", view);
+        pbrShader.setVec3("viewPos", camera.Position);
+        pbrShader.setVec3("albedo", Albedo);
+        pbrShader.setFloat("ao", Ao);
+        pbrShader.setFloat("metallic", Metallic);
+        pbrShader.setFloat("roughness", Roughness);
+        pbrShader.setInt("lightopen", lightON);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+        renderSphere();
+
+        backgroundShader.use();
+        backgroundShader.setMat4("view", view);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+        RenderCube();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        double currTime = glfwGetTime();
+        frames++;
+        if (currTime - lastTime >= 1.0) {
+            // If last prinf() was more than 1 sec ago
+            // printf and reset timer
+            //printf("%f ms/frame\n", 1000.0 / double(nbFrames));
+            //printf("%d fps\n", nbFrames);
+            frames = 0;
+            lastTime += 1.0;
+        }
+
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // optional: de-allocate all resources once they've outlived their purpose:
+    // ------------------------------------------------------------------------
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+}
+
+void Application::SetOpenGLState() {
+    // configure global OpenGL state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+    glViewport(0, 0, wndWidth, wndHeight);
 }
