@@ -25,11 +25,15 @@ public:
     Mesh() = default;
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
+public:
+    void Draw();
+
 protected:
     unsigned int VAO, VBO, EBO;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     void setupMesh();
+
 };
 
 class Quad : public Mesh {

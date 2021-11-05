@@ -14,6 +14,7 @@ public:
     Model(const char *path) {
         loadModel(path);
     }
+    void Draw();
 
 private:
     std::vector<Mesh> meshes;

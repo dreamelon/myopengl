@@ -3,46 +3,73 @@
 #include "camera.h"
 #include "mesh.h"
 #include "model.h"
+#include <memory>
 
 class Application {
 
 private:
     // Window
-    const unsigned int wndWidth = 1280;
-    const unsigned int wndHeight = 720;
+    static const unsigned int wndWidth = 1280;
+    static const unsigned int wndHeight = 720;
     GLFWwindow* window;
 
     // Camera
     static Camera camera;
 
-    // Input
-    float lastX = wndWidth / 2.0f;
-    float lastY = wndHeight / 2.0f;
-    bool firstMouse = true;
-
     // timing
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-
-
-    double uixpos, uiypos;
-
     // GUI
     bool show_demo_window = true;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-    bool enterWindowFlag = true;
+    double uixpos, uiypos;
     int item_current = 0;
     int item = 0;
     int lightON = 0;
     bool showMonitor = true;
 
+    // Input
+    static float lastX;
+    static float lastY;
+    static bool firstMouse;
+    static bool enterWindowFlag;
+
 private:
     glm::mat4 view;
     glm::mat4 projection;
 
+    typedef std::unique_ptr<Shader> Ptr;
+
+    // Shaders
+    Shader pbrShader;
+    Shader equirectangularToCubemapShader;
+    Shader backgroundShader;
+    Shader irradianceShader;
+    Shader prefilterShader;
+    Shader brdfShader;
+
+    // Models
+    Model dragonModel;
+    Cube cube;
+    Sphere sphere;
+    Quad quad;
+
+    // Textures
+    Texture albedo;
+    Texture normal;
+    Texture metallic;
+    Texture roughness;
+    Texture ao;
+
+    // wall
+    Texture wallAlbedoMap;
+    Texture wallNormalMap;
+    Texture wallMetallicMap;
+    Texture wallRoughnessMap;
+    Texture wallAOMap;
+
+    Texture envCubemap;
 
 public:
     void ShowMonitor(bool* p_open);
@@ -54,10 +81,10 @@ public:
     bool InitScene();
     void SetOpenGLState();
 
+    void preBake();
     void Run();
 
     void RenderGUI();
-
     void SetupGUI();
 
 public:

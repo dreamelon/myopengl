@@ -1,13 +1,16 @@
 #pragma once
 #include <glm/glm.hpp>
-
 #include <string>
+#include <map>
+#include "texture.h"
 
 class Shader
 {
 public:
     unsigned int id;
     std::string name;
+
+public:
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
@@ -27,9 +30,13 @@ public:
     void setMat4(const std::string& name, const glm::mat4& mat) const;
 
 private:
+
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
     void checkCompileErrors(GLuint shader, std::string type);
+
+private:
+    std::map<int, Texture> m_TextureUniformNameAndBindUnitAndTC;
 };
 
 

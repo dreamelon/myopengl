@@ -5,8 +5,10 @@
 class Texture
 {
 public:
-    Texture(const char *path, bool gamma = false);
+    Texture(const char *path, bool gamma = false, bool hdr = false);
+    Texture();
 
-private:
-    unsigned int textureID;
+public:
+    unsigned int id;
 };
+

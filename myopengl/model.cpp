@@ -16,6 +16,11 @@ void Model::loadModel(string const path) {
     processNode(scene->mRootNode, scene);
 }
 
+void Model::Draw() {
+    for (auto& mesh : meshes)
+        mesh.Draw();
+}
+
 Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
     vector<Vertex> vertices;
     vector<unsigned int> indices;
