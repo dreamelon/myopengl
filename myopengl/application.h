@@ -1,4 +1,6 @@
 #pragma once
+
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include "camera.h"
 #include "mesh.h"
@@ -51,25 +53,23 @@ private:
 
     // Models
     Model dragonModel;
-    Cube cube;
-    Sphere sphere;
-    Quad quad;
+    Sphere sphere = Sphere();
+
+    Quad quad = Quad();
+    Cube cube = Cube();
 
     // Textures
-    Texture albedo;
-    Texture normal;
-    Texture metallic;
-    Texture roughness;
-    Texture ao;
-
-    // wall
     Texture wallAlbedoMap;
     Texture wallNormalMap;
     Texture wallMetallicMap;
     Texture wallRoughnessMap;
     Texture wallAOMap;
 
-    Texture envCubemap;
+    TextureCube envCubemap;
+    TextureCube irradianceMap = TextureCube(32, 32);
+    TextureCube prefilterMap = TextureCube(128, 128, true);
+    Texture hdrTexture;
+    Texture brdfLUTTexture;
 
 public:
     void ShowMonitor(bool* p_open);
@@ -78,7 +78,7 @@ public:
 
     bool InitializeWindow();
     bool InitGLAD();
-    bool InitScene();
+    void InitScene();
     void SetOpenGLState();
 
     void preBake();

@@ -12,3 +12,8 @@ public:
     unsigned int id;
 };
 
+class TextureCube : public Texture{
+public:
+    TextureCube(unsigned int width = 512, unsigned int height = 512, bool mipmap = false);
+};
+

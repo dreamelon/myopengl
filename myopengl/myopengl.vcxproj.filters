@@ -66,6 +66,27 @@
     <ClInclude Include="texture.h">
       <Filter>HeadFiles\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_glfw.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_opengl3.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>HeadFiles\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myopengl.cpp">
@@ -75,12 +96,6 @@
       <Filter>SourceFiles</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>SourceFiles\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>SourceFiles\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
       <Filter>SourceFiles\UI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_glfw.cpp">
@@ -109,6 +124,15 @@
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>SourceFiles\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>SourceFiles\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>SourceFiles\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>SourceFiles\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

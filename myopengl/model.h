@@ -14,11 +14,11 @@ public:
     Model(const char *path) {
         loadModel(path);
     }
+    Model() = default;
     void Draw();
 
 private:
     std::vector<Mesh> meshes;
-    std::string directory;
 
     void loadModel(std::string const path);
 

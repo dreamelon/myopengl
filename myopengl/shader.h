@@ -14,7 +14,7 @@ public:
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
-
+    Shader() = default;
     // activate the shader
     // ------------------------------------------------------------------------
     void use();
@@ -33,10 +33,10 @@ private:
 
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
-    void checkCompileErrors(GLuint shader, std::string type);
+    void checkCompileErrors(unsigned int shader, std::string type);
 
 private:
-    std::map<int, Texture> m_TextureUniformNameAndBindUnitAndTC;
+    /*std::map<int, std::unique_ptr<Texture>> m_TextureUniformNameAndBindUnitAndTC;*/
 };
 
 

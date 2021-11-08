@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
+Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
@@ -86,7 +86,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 
 }
 
-void Shader::checkCompileErrors(GLuint shader, std::string type)
+void Shader::checkCompileErrors(unsigned int shader, std::string type)
 {
     GLint success;
     GLchar infoLog[1024];
