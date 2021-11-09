@@ -126,18 +126,19 @@ bool Application::Init() {
 }
 
 void Application::InitScene() {
+
     LoadModels();
-    LoadShaders();
     LoadTextures();
+    LoadShaders();
 }
 
 void Application::LoadModels() {
     // load models
     // -----------
-    dragonModel = Model("Resources/dragon.obj");
-    cube.setupMesh();
-    sphere.setupMesh();
-    quad.setupMesh();
+    dragonModel = std::make_unique<Model>("../Resources/dragon.obj");
+    cube = std::make_unique<Cube>();
+    sphere = std::make_unique<Sphere>();
+    quad = std::make_unique<Quad>();
 }
 
 void Application::LoadShaders() {
@@ -150,8 +151,12 @@ void Application::LoadShaders() {
     prefilterShader                 =   Shader("shaders/cubeMap.vs", "shaders/prefilter.fs");
     brdfShader                      =   Shader("shaders/brdf.vs", "shaders/brdf.fs");
 
-    pbrShader.use();
+    backgroundShader.use();
+    backgroundShader.setMat4("view", view);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
 
+    pbrShader.use();
     pbrShader.setInt("irradianceMap", 0);
     pbrShader.setInt("prefilterMap", 1);
     pbrShader.setInt("brdfLUT", 2);
@@ -161,16 +166,42 @@ void Application::LoadShaders() {
     pbrShader.setInt("roughnessMap", 6);
     pbrShader.setInt("aoMap", 7);
     pbrShader.setInt("skybox", 8);
+    glActiveTexture(GL_TEXTURE8);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap->id);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap->id);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture->id);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, wallAlbedoMap->id);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, wallNormalMap->id);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, wallMetallicMap->id);
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, wallRoughnessMap->id);
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, wallAOMap->id);
 }
 
 void Application::LoadTextures() {
-    wallAlbedoMap    = Texture("../Resources/PBR/wall/albedo.png", true);
-    wallNormalMap    = Texture("../Resources/PBR/wall/normal.png", false);
-    wallMetallicMap  = Texture("../Resources/PBR/wall/metallic.png", false);
-    wallRoughnessMap = Texture("../Resources/PBR/wall/roughness.png", false);
-    wallAOMap        = Texture("../Resources/PBR/wall/ao.png", true);
+    wallAlbedoMap    = std::make_unique<Texture>("../Resources/PBR/wall/albedo.png", true);
+    wallNormalMap    = std::make_unique<Texture>("../Resources/PBR/wall/normal.png", false);
+    wallMetallicMap  = std::make_unique<Texture>("../Resources/PBR/wall/metallic.png", false);
+    wallRoughnessMap = std::make_unique<Texture>("../Resources/PBR/wall/roughness.png", false);
+    wallAOMap        = std::make_unique<Texture>("../Resources/PBR/wall/ao.png", true);
 
-    hdrTexture       = Texture("../Resources/IBL/newport_loft.hdr", false, true);
+    double lastTime = glfwGetTime();
+    hdrTexture       = std::make_unique<Texture>("../Resources/IBL/newport_loft.hdr");
+    double currTime = glfwGetTime();
+    std::cout << currTime - lastTime << std::endl;
+
+    brdfLUTTexture = std::make_unique<Texture>();
+    envCubemap = std::make_unique<TextureCube>();
+    irradianceMap = std::make_unique<TextureCube>(32, 32);
+    prefilterMap = std::make_unique<TextureCube>(128, 128, true);
 }
 
 void Application::SetupGUI() {
@@ -201,7 +232,7 @@ void Application::RenderGUI() {
         static int counter = 0;
 
         ImGui::Begin("Panel");
-        ShowMonitor(&showMonitor);
+        //ShowMonitor(&showMonitor);
 
         ImGui::Checkbox("Demo Window", &show_demo_window);
         // Edit bool storing our window open/close state
@@ -272,12 +303,20 @@ void Application::ShowMonitor(bool* p_open)
 }
 
 void Application::Run() {
+
+    InitScene();
+    preBake();
+    SetOpenGLState();
+    SetupGUI();
+
+
     // render loop
     // -----------
     double lastTime = glfwGetTime();
     int frames = 0;
     while (!glfwWindowShouldClose(window))
     {
+        RenderGUI();
         // per-frame time logic
         // --------------------
 
@@ -308,43 +347,23 @@ void Application::Run() {
         pbrShader.setMat4("view", view);
         pbrShader.setVec3("viewPos", camera.Position);
 
-        glActiveTexture(GL_TEXTURE8);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap.id);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap.id);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap.id);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, brdfLUTTexture.id);
 
+        // dragon
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-5.0, 0.0, 2.0));
         pbrShader.setMat4("model", model);
+        dragonModel->Draw();
 
         // sphere
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, wallAlbedoMap.id);
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, wallNormalMap.id);
-        glActiveTexture(GL_TEXTURE5);
-        glBindTexture(GL_TEXTURE_2D, wallMetallicMap.id);
-        glActiveTexture(GL_TEXTURE6);
-        glBindTexture(GL_TEXTURE_2D, wallRoughnessMap.id);
-        glActiveTexture(GL_TEXTURE7);
-        glBindTexture(GL_TEXTURE_2D, wallAOMap.id);
-        dragonModel.Draw();
-
-        // dragon
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(3.0, 0.0, 2.0));
         pbrShader.setMat4("model", model);
-        sphere.Draw();
+        sphere->Draw();
 
         backgroundShader.use();
         backgroundShader.setMat4("view", view);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap.id);
-        cube.Draw();
+
+        cube->Draw();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -421,20 +440,20 @@ void Application::preBake() {
     equirectangularToCubemapShader.setInt("equirectangularMap", 0);
     equirectangularToCubemapShader.setMat4("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, hdrTexture.id);
+    glBindTexture(GL_TEXTURE_2D, hdrTexture->id);
 
     glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     for (unsigned int i = 0; i < 6; ++i)
     {
         equirectangularToCubemapShader.setMat4("view", captureViews[i]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap.id, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap->id, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cube.Draw();
+        cube->Draw();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap.id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
     //ibl-diffuse部分
@@ -451,16 +470,16 @@ void Application::preBake() {
     irradianceShader.setInt("environmentMap", 0);
     irradianceShader.setMat4("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap.id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
 
     glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     for (unsigned int i = 0; i < 6; ++i)
     {
         irradianceShader.setMat4("view", captureViews[i]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap.id, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap->id, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cube.Draw();
+        cube->Draw();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -472,7 +491,7 @@ void Application::preBake() {
     prefilterShader.setInt("environmentMap", 0);
     prefilterShader.setMat4("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap.id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
 
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     unsigned int maxMipLevels = 5;
@@ -491,10 +510,10 @@ void Application::preBake() {
         for (unsigned int i = 0; i < 6; ++i)
         {
             prefilterShader.setMat4("view", captureViews[i]);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap.id, mip);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap->id, mip);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            cube.Draw();
+            cube->Draw();
         }
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -507,12 +526,12 @@ void Application::preBake() {
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLUTTexture.id, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLUTTexture->id, 0);
 
     glViewport(0, 0, 512, 512);
     brdfShader.use();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    quad.Draw();
+    quad->Draw();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

@@ -5,7 +5,8 @@
 class Texture
 {
 public:
-    Texture(const char *path, bool gamma = false, bool hdr = false);
+    Texture(const char *path, bool gamma);
+    Texture(const char *path);
     Texture();
 
 public:

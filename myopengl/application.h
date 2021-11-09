@@ -52,24 +52,27 @@ private:
     Shader brdfShader;
 
     // Models
-    Model dragonModel;
-    Sphere sphere = Sphere();
+    std::unique_ptr<Model> dragonModel;
 
-    Quad quad = Quad();
-    Cube cube = Cube();
+    typedef std::unique_ptr<Mesh> MeshPtr;
+    MeshPtr sphere;
+    MeshPtr quad;
+    MeshPtr cube;
 
     // Textures
-    Texture wallAlbedoMap;
-    Texture wallNormalMap;
-    Texture wallMetallicMap;
-    Texture wallRoughnessMap;
-    Texture wallAOMap;
+    typedef std::unique_ptr<Texture> TexturePtr;
+    TexturePtr wallAlbedoMap;
+    TexturePtr wallNormalMap;
+    TexturePtr wallMetallicMap;
+    TexturePtr wallRoughnessMap;
+    TexturePtr wallAOMap;
 
-    TextureCube envCubemap;
-    TextureCube irradianceMap = TextureCube(32, 32);
-    TextureCube prefilterMap = TextureCube(128, 128, true);
-    Texture hdrTexture;
-    Texture brdfLUTTexture;
+    TexturePtr hdrTexture;
+    TexturePtr brdfLUTTexture;
+    std::unique_ptr<TextureCube> envCubemap;
+    std::unique_ptr<TextureCube> irradianceMap;
+    std::unique_ptr<TextureCube> prefilterMap;
+
 
 public:
     void ShowMonitor(bool* p_open);
