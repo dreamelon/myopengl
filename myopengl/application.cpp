@@ -8,8 +8,8 @@
 bool Application::firstMouse = true;
 bool Application::enterWindowFlag = true;
 
-float Application::lastX = wndWidth / 2.0f;
-float Application::lastY = wndHeight / 2.0f;
+double Application::lastX = wndWidth / 2.0f;
+double Application::lastY = wndHeight / 2.0f;
 
 Camera Application::camera = Camera();
 
@@ -55,8 +55,8 @@ void Application::mouse_callback(GLFWwindow* window, double xpos, double ypos)
             firstMouse = false;
         }
 
-        float xoffset = xpos - lastX;
-        float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+        double xoffset = xpos - lastX;
+        double yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
         lastX = xpos;
         lastY = ypos;
@@ -125,8 +125,7 @@ bool Application::Init() {
     return true;
 }
 
-void Application::InitScene() {
-
+void Application::LoadResources() {
     LoadModels();
     LoadTextures();
     LoadShaders();
@@ -166,8 +165,6 @@ void Application::LoadShaders() {
     pbrShader.setInt("roughnessMap", 6);
     pbrShader.setInt("aoMap", 7);
     pbrShader.setInt("skybox", 8);
-    glActiveTexture(GL_TEXTURE8);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap->id);
     glActiveTexture(GL_TEXTURE1);
@@ -184,6 +181,8 @@ void Application::LoadShaders() {
     glBindTexture(GL_TEXTURE_2D, wallRoughnessMap->id);
     glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, wallAOMap->id);
+    glActiveTexture(GL_TEXTURE8);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
 }
 
 void Application::LoadTextures() {
@@ -304,23 +303,22 @@ void Application::ShowMonitor(bool* p_open)
 
 void Application::Run() {
 
-    InitScene();
-    preBake();
-    SetOpenGLState();
+    LoadResources();
     SetupGUI();
-
-
+    PreBake();
+    SetOpenGLState();
     // render loop
     // -----------
     double lastTime = glfwGetTime();
     int frames = 0;
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 100.0f);
     while (!glfwWindowShouldClose(window))
     {
         RenderGUI();
         // per-frame time logic
         // --------------------
 
-        float currentFrame = glfwGetTime();
+        double currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
@@ -333,11 +331,8 @@ void Application::Run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         glfwGetCursorPos(window, &uixpos, &uiypos);
-
         // initialize static shader uniforms 
         // --------------------------------------------------
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 100.0f);
-
         backgroundShader.use();
         backgroundShader.setMat4("projection", projection);
         pbrShader.use();
@@ -346,7 +341,6 @@ void Application::Run() {
         glm::mat4 view = camera.GetViewMatrix();
         pbrShader.setMat4("view", view);
         pbrShader.setVec3("viewPos", camera.Position);
-
 
         // dragon
         glm::mat4 model = glm::mat4(1.0f);
@@ -403,7 +397,7 @@ void Application::SetOpenGLState() {
     glViewport(0, 0, wndWidth, wndHeight);
 }
 
-void Application::preBake() {
+void Application::PreBake() {
     //环境光大多超过1.0范围，需要带浮点颜色缓冲的帧缓冲
     unsigned int captureFBO;
     unsigned int captureRBO;

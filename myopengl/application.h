@@ -19,8 +19,8 @@ private:
     static Camera camera;
 
     // timing
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
+    double deltaTime = 0.0;
+    double lastFrame = 0.0;
 
     // GUI
     bool show_demo_window = true;
@@ -32,8 +32,8 @@ private:
     bool showMonitor = true;
 
     // Input
-    static float lastX;
-    static float lastY;
+    static double lastX;
+    static double lastY;
     static bool firstMouse;
     static bool enterWindowFlag;
 
@@ -81,10 +81,10 @@ public:
 
     bool InitializeWindow();
     bool InitGLAD();
-    void InitScene();
+    void LoadResources();
     void SetOpenGLState();
 
-    void preBake();
+    void PreBake();
     void Run();
 
     void RenderGUI();
