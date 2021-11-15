@@ -24,7 +24,8 @@ void Mesh::setupMesh() {
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
+    unsigned int vertexSize = sizeof(Vertex);
+    unsigned int bufferSize = vertices.size() * sizeof(Vertex);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -33,7 +34,7 @@ void Mesh::setupMesh() {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
-    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(1); 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 
     glEnableVertexAttribArray(2);
@@ -57,9 +58,6 @@ Sphere::Sphere() {
             float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
 
             vertices.push_back({ xPos, yPos, zPos, xPos, yPos, zPos, xSegment, ySegment });
-            //positions.push_back(glm::vec3(xPos, yPos, zPos));
-            //uv.push_back(glm::vec2(xSegment, ySegment));
-            //normals.push_back(glm::vec3(xPos, yPos, zPos));
         }
     }
 
@@ -84,10 +82,13 @@ Sphere::Sphere() {
         }
         oddRow = !oddRow;
     }
-    VAO = 1;
-    VBO = 1;
-    EBO = 1;
     setupMesh();
+}
+
+void Sphere::Draw() {
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLE_STRIP, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
 Cube::Cube() {
@@ -149,9 +150,6 @@ Cube::Cube() {
         20, 21, 22,
         21, 20, 23
     };
-    VAO = 0;
-    VBO = 0;
-    EBO = 0;
     setupMesh();
 }
 
@@ -163,8 +161,5 @@ Quad::Quad() {
         {  1.f, -1.f, 0.f, 0, 1, 0, 1.f, 0.f },
     };
     indices = { 0, 1, 2, 1, 3, 4 };
-    VAO = 0;
-    VBO = 0;
-    EBO = 0;
     setupMesh();
 }

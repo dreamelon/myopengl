@@ -186,14 +186,14 @@ void Application::LoadShaders() {
 }
 
 void Application::LoadTextures() {
-    wallAlbedoMap    = std::make_unique<Texture>("../Resources/PBR/wall/albedo.png", true);
-    wallNormalMap    = std::make_unique<Texture>("../Resources/PBR/wall/normal.png", false);
-    wallMetallicMap  = std::make_unique<Texture>("../Resources/PBR/wall/metallic.png", false);
-    wallRoughnessMap = std::make_unique<Texture>("../Resources/PBR/wall/roughness.png", false);
-    wallAOMap        = std::make_unique<Texture>("../Resources/PBR/wall/ao.png", true);
+    wallAlbedoMap    = std::make_unique<Texture>("../Resources/PBR/rusted_iron/albedo.png", true);
+    wallNormalMap    = std::make_unique<Texture>("../Resources/PBR/rusted_iron/normal.png", false);
+    wallMetallicMap  = std::make_unique<Texture>("../Resources/PBR/rusted_iron/metallic.png", false);
+    wallRoughnessMap = std::make_unique<Texture>("../Resources/PBR/rusted_iron/roughness.png", false);
+    wallAOMap        = std::make_unique<Texture>("../Resources/PBR/rusted_iron/ao.png", true);
 
     double lastTime = glfwGetTime();
-    hdrTexture       = std::make_unique<Texture>("../Resources/IBL/newport_loft.hdr");
+    equirectangularMap       = std::make_unique<Texture>("../Resources/IBL/newport_loft.hdr");
     double currTime = glfwGetTime();
     std::cout << currTime - lastTime << std::endl;
 
@@ -247,14 +247,14 @@ void Application::RenderGUI() {
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
         if (uixpos < ((double)ImGui::GetWindowPos().x + (double)ImGui::GetWindowSize().x) && uixpos > ImGui::GetWindowPos().x && uiypos < ((double)ImGui::GetWindowPos().y + (double)ImGui::GetWindowSize().y) && uiypos > ImGui::GetWindowPos().y) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             enterWindowFlag = false;
         }
 
         else
         {
             enterWindowFlag = true;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         }
         ImGui::End();
     }
@@ -307,6 +307,23 @@ void Application::Run() {
     SetupGUI();
     PreBake();
     SetOpenGLState();
+    unsigned int sphereVAO = 0;
+    unsigned int indexCount;
+    // lights
+    // ------
+    glm::vec3 lightPositions[] = {
+        glm::vec3(-10.0f,  10.0f, 10.0f),
+        glm::vec3(10.0f,  10.0f, 10.0f),
+        glm::vec3(-10.0f, -10.0f, 10.0f),
+        glm::vec3(10.0f, -10.0f, 10.0f),
+    };
+    glm::vec3 lightColors[] = {
+        glm::vec3(300.0f, 300.0f, 300.0f),
+        glm::vec3(300.0f, 300.0f, 300.0f),
+        glm::vec3(300.0f, 300.0f, 300.0f),
+        glm::vec3(300.0f, 300.0f, 300.0f)
+    };
+
     // render loop
     // -----------
     double lastTime = glfwGetTime();
@@ -333,14 +350,20 @@ void Application::Run() {
         glfwGetCursorPos(window, &uixpos, &uiypos);
         // initialize static shader uniforms 
         // --------------------------------------------------
-        backgroundShader.use();
-        backgroundShader.setMat4("projection", projection);
         pbrShader.use();
         pbrShader.setMat4("projection", projection);
 
         glm::mat4 view = camera.GetViewMatrix();
         pbrShader.setMat4("view", view);
         pbrShader.setVec3("viewPos", camera.Position);
+
+        for (unsigned int i = 0; i < sizeof(lightPositions) / sizeof(lightPositions[0]); ++i)
+        {
+            glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
+            newPos = lightPositions[i];
+            pbrShader.setVec3("lightPositions[" + std::to_string(i) + "]", newPos);
+            pbrShader.setVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
+        }
 
         // dragon
         glm::mat4 model = glm::mat4(1.0f);
@@ -355,8 +378,8 @@ void Application::Run() {
         sphere->Draw();
 
         backgroundShader.use();
+        backgroundShader.setMat4("projection", projection);
         backgroundShader.setMat4("view", view);
-
         cube->Draw();
 
         ImGui::Render();
@@ -367,8 +390,6 @@ void Application::Run() {
         if (currTime - lastTime >= 1.0) {
             // If last prinf() was more than 1 sec ago
             // printf and reset timer
-            //printf("%f ms/frame\n", 1000.0 / double(nbFrames));
-            //printf("%d fps\n", nbFrames);
             frames = 0;
             lastTime += 1.0;
         }
@@ -434,7 +455,7 @@ void Application::PreBake() {
     equirectangularToCubemapShader.setInt("equirectangularMap", 0);
     equirectangularToCubemapShader.setMat4("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, hdrTexture->id);
+    glBindTexture(GL_TEXTURE_2D, equirectangularMap->id);
 
     glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
@@ -462,9 +483,9 @@ void Application::PreBake() {
     // -----------------------------------------------------------------------------
     irradianceShader.use();
     irradianceShader.setInt("environmentMap", 0);
-    irradianceShader.setMat4("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
+    irradianceShader.setMat4("projection", captureProjection);
 
     glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);

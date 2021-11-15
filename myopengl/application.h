@@ -67,7 +67,7 @@ private:
     TexturePtr wallRoughnessMap;
     TexturePtr wallAOMap;
 
-    TexturePtr hdrTexture;
+    TexturePtr equirectangularMap;
     TexturePtr brdfLUTTexture;
     std::unique_ptr<TextureCube> envCubemap;
     std::unique_ptr<TextureCube> irradianceMap;

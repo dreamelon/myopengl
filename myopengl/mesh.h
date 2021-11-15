@@ -26,7 +26,7 @@ public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
 public:
-    void Draw();
+    virtual void Draw();
     void setupMesh();
 
 protected:
@@ -46,6 +46,7 @@ public:
 class Sphere : public Mesh {
 public:
     Sphere();
+    void Draw() override;
 };
 
 class Cube : public Mesh {

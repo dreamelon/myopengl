@@ -19,8 +19,8 @@ uniform sampler2D brdfLUT;
 
 
 // lights
-uniform vec3 lightPositions[1];
-uniform vec3 lightColors[1];
+uniform vec3 lightPositions[4];
+uniform vec3 lightColors[4];
 
 uniform vec3 viewPos;
 
@@ -109,7 +109,7 @@ void main()
 
     //4个点光源，只有4个方向的入射光线会影响片段(像素)的着色。
     //可以直接循环N次计算这些入射光线的方向(N也就是场景中光源的数目)。
-    for(int i = 0; i < 1; i++)
+    for(int i = 0; i < 4; i++)
     {
         vec3 L = normalize(lightPositions[i] - WorldPos);
         vec3 H = normalize(V+L);
@@ -132,7 +132,6 @@ void main()
 
         float NdotL = max(dot(N, L), 0.0);
         Lo += (kD * albedo / PI + specular) * radiance * NdotL;// brdf diff+spec
-
     }
 
     //vec3 ambient = vec3(0.03) * albedo * ao;
@@ -151,15 +150,9 @@ void main()
     vec3 specular = prefilteredColor * (F0 * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular ) * ao;
-    // float ratio = 1.00 / 1.52;
-    // //vec3 r = refract(-V, N, ratio);
-    // vec3 r = reflect(-V, N);
-    // vec3 ambient = texture(skybox, r).rgb;
 
-    vec3 color;
-    if (lightopen)
-         color   = ambient;
-    else color =  Lo;
+    vec3 color = ambient + Lo;
+
     
     //hdr and gamma     
     color = color / (vec3(1.0) + color);
