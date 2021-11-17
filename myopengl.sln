@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "001PBR", "myopengl\myopengl.vcxproj", "{9A2E9B7D-45C1-4800-850E-9699CF3A3C03}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "001PBR", "001_PBR\PBR.vcxproj", "{9A2E9B7D-45C1-4800-850E-9699CF3A3C03}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "002Voxelization", "002_Voxelization\Voxelization.vcxproj", "{EE5B8E2A-ABC2-4CBC-84A3-89F3E0F281D1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{723731A2-3A95-4C89-8B97-D3BDBC24AD4F} = {723731A2-3A95-4C89-8B97-D3BDBC24AD4F}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "002Voxelization", "Voxelization\Voxelization.vcxproj", "{EE5B8E2A-ABC2-4CBC-84A3-89F3E0F281D1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frame", "Frame\Frame.vcxproj", "{723731A2-3A95-4C89-8B97-D3BDBC24AD4F}"
 EndProject

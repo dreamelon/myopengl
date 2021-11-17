@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SourceFiles">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="HeadFiles">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="ResourceFiles">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="SourceFiles\Shaders">
+      <UniqueIdentifier>{3c6a5cbf-8843-4192-ae07-7f2b2eeb67c1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\background.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\background.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\cubeMap.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\equirectangular_to_cubeMap.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\irradiance_convolution.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\pbrshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\pbrshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\prefilter.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\quadshader.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\quadshader.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shadowmap.f">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\shadowmap.v">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\Phong.fs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+    <None Include="shaders\Phong.vs">
+      <Filter>SourceFiles\Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
