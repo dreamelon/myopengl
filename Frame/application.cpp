@@ -5,6 +5,176 @@
 #include "IMGUI/imgui_impl_glfw.h"
 #include "IMGUI/imgui_impl_opengl3.h"
 
+unsigned int cubeVAO = 0;
+unsigned int cubeIndexCount;
+void DrawCube() {
+    if(cubeVAO == 0){
+        std::vector<Vertex> vertices = {
+            // Back face
+            { -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f }, // Bottom-left
+            {  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f }, // top-right
+            {  0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f }, // bottom-right
+            { -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f }, // top-left
+
+            // Front face
+            { -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f }, // bottom-left
+            {  0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f }, // bottom-right
+            {  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f }, // top-right
+            { -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f }, // top-left
+
+            // Left face
+            { -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f }, // top-right
+            { -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f }, // top-left
+            { -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f }, // bottom-left
+            { -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f }, // bottom-right
+
+
+            // Right face
+            {  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f }, // top-left
+            {  0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f }, // bottom-right
+            {  0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f }, // top-right
+            {  0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f }, // bottom-left
+
+            // Bottom face
+            { -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f }, // top-right
+            {  0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f }, // top-left
+            {  0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f }, // bottom-left
+            { -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f }, // bottom-right
+
+            // Top face                             
+            { -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f }, // top-left
+            {  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f }, // bottom-right
+            {  0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f }, // top-right
+            { -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f }  // bottom-left
+        };
+
+        std::vector<unsigned int> indices = {
+            0, 1, 2,
+            1, 0, 3,
+
+            4, 5, 6,
+            6, 7, 4,
+
+            8, 9, 10,
+            10, 11, 8,
+
+            12, 13, 14,
+            13, 12, 15,
+
+            16, 17, 18,
+            18, 19, 16,
+
+            20, 21, 22,
+            21, 20, 23
+        };
+        cubeIndexCount = indices.size();
+        SetupMesh(cubeVAO, vertices, indices);
+    }
+    glBindVertexArray(cubeVAO);
+    glDrawElements(GL_TRIANGLES, cubeIndexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+unsigned int quadVAO = 0;
+unsigned int quadIndexCount;
+void DrawQuad() {
+    if (quadVAO == 0) {
+        std::vector<Vertex> vertices = {
+            { -1.f,  1.f, 0.f, 0, 1, 0, 0.f, 1.f },
+            { -1.f, -1.f, 0.f, 0, 1, 0, 0.f, 0.f },
+            {  1.f,  1.f, 0.f, 0, 1, 0, 1.f, 1.f },
+            {  1.f, -1.f, 0.f, 0, 1, 0, 1.f, 0.f },
+        };
+        std::vector<unsigned int> indices = { 0, 1, 2, 1, 3, 4 };
+        quadIndexCount = indices.size();
+        SetupMesh(cubeVAO, vertices, indices);
+    }
+
+    glBindVertexArray(quadVAO);
+    glDrawElements(GL_TRIANGLES, quadIndexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+}
+
+unsigned int sphereVAO = 0;
+unsigned int sphereIndexCount;
+void DrawSphere() {
+    if (sphereVAO == 0) {
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+        const unsigned int X_SEGMENTS = 128;
+        const unsigned int Y_SEGMENTS = 128;
+        const float PI = 3.14159265359;
+        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        {
+            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            {
+                float xSegment = (float)x / (float)X_SEGMENTS;
+                float ySegment = (float)y / (float)Y_SEGMENTS;
+                float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+                float yPos = std::cos(ySegment * PI);
+                float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+                vertices.push_back({ xPos, yPos, zPos, xPos, yPos, zPos, xSegment, ySegment });
+            }
+        }
+
+        bool oddRow = false;
+        for (int y = 0; y < Y_SEGMENTS; ++y)
+        {
+            if (!oddRow) // even rows: y == 0, y == 2; and so on
+            {
+                for (int x = 0; x <= X_SEGMENTS; ++x)
+                {
+                    indices.push_back(y * (X_SEGMENTS + 1) + x);
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                }
+            }
+            else
+            {
+                for (int x = X_SEGMENTS; x >= 0; --x)
+                {
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                    indices.push_back(y * (X_SEGMENTS + 1) + x);
+                }
+            }
+            oddRow = !oddRow;
+        }
+        sphereIndexCount = indices.size();
+        SetupMesh(cubeVAO, vertices, indices);
+    }
+    glBindVertexArray(sphereVAO);
+    glDrawElements(GL_TRIANGLE_STRIP, sphereIndexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void SetupMesh(unsigned int& VAO, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+    glGenVertexArrays(1, &VAO);
+    unsigned int VBO, EBO;
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    unsigned int vertexSize = sizeof(Vertex);
+    unsigned int bufferSize = vertices.size() * sizeof(Vertex);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+    glBindVertexArray(0);
+}
+
 bool Application::firstMouse = true;
 bool Application::enterWindowFlag = true;
 
@@ -135,9 +305,9 @@ void Application::LoadModels() {
     // load models
     // -----------
     dragonModel = std::make_unique<Model>("../Resources/dragon.obj");
-    cube = std::make_unique<Cube>();
-    sphere = std::make_unique<Sphere>();
-    quad = std::make_unique<Quad>();
+    //cube = std::make_unique<Cube>();
+    //sphere = std::make_unique<Sphere>();
+    //quad = std::make_unique<Quad>();
 }
 
 void Application::LoadShaders() {
@@ -155,7 +325,7 @@ void Application::LoadShaders() {
     backgroundShader.use();
     backgroundShader.setMat4("view", view);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureMap["envCubemap"]->id);
 
     auto& pbrShader = shaderMap["pbrShader"];
     pbrShader.use();
@@ -169,41 +339,38 @@ void Application::LoadShaders() {
     pbrShader.setInt("aoMap", 7);
     pbrShader.setInt("skybox", 8);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap->id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureMap["irradianceMap"]->id);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap->id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureMap["prefilterMap"]->id);
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["brdfLUTTex"]->id);
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, wallAlbedoMap->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["wallAlbedoMap"]->id);
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, wallNormalMap->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["wallNormalMap"]->id);
     glActiveTexture(GL_TEXTURE5);
-    glBindTexture(GL_TEXTURE_2D, wallMetallicMap->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["wallMetallicMap"]->id);
     glActiveTexture(GL_TEXTURE6);
-    glBindTexture(GL_TEXTURE_2D, wallRoughnessMap->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["wallRoughnessMap"]->id);
     glActiveTexture(GL_TEXTURE7);
-    glBindTexture(GL_TEXTURE_2D, wallAOMap->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["wallAOMap"]->id);
     glActiveTexture(GL_TEXTURE8);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureMap["envCubemap"]->id);
 }
 
 void Application::LoadTextures() {
-    wallAlbedoMap    = std::make_unique<Texture>("../Resources/PBR/rusted_iron/albedo.png", true);
-    wallNormalMap    = std::make_unique<Texture>("../Resources/PBR/rusted_iron/normal.png", false);
-    wallMetallicMap  = std::make_unique<Texture>("../Resources/PBR/rusted_iron/metallic.png", false);
-    wallRoughnessMap = std::make_unique<Texture>("../Resources/PBR/rusted_iron/roughness.png", false);
-    wallAOMap        = std::make_unique<Texture>("../Resources/PBR/rusted_iron/ao.png", true);
+    textureMap["wallAlbedoMap"]     = std::make_unique<Texture>("wallAlbedoMap", "../Resources/PBR/rusted_iron/albedo.png", true);
+    textureMap["wallNormalMap"]     = std::make_unique<Texture>("wallNormalMap", "../Resources/PBR/rusted_iron/normal.png", false);
+    textureMap["wallMetallicMap"]   = std::make_unique<Texture>("wallMetallicMap", "../Resources/PBR/rusted_iron/metallic.png", false);
+    textureMap["wallRoughnessMap"]  = std::make_unique<Texture>("wallRoughnessMap", "../Resources/PBR/rusted_iron/roughness.png", false);
+    textureMap["wallAOMap"]         = std::make_unique<Texture>("wallAOMap", "../Resources/PBR/rusted_iron/ao.png", true);
 
-    double lastTime = glfwGetTime();
-    equirectangularMap       = std::make_unique<Texture>("../Resources/IBL/newport_loft.hdr");
-    double currTime = glfwGetTime();
-    std::cout << currTime - lastTime << std::endl;
+    textureMap["equirectangularMap"]       = std::make_unique<Texture>("equirectangularMap", "../Resources/IBL/newport_loft.hdr");
 
-    brdfLUTTexture = std::make_unique<Texture>();
-    envCubemap = std::make_unique<TextureCube>();
-    irradianceMap = std::make_unique<TextureCube>(32, 32);
-    prefilterMap = std::make_unique<TextureCube>(128, 128, true);
+    textureMap["brdfLUTTex"] = std::make_unique<Texture>("brdfLUTTex");
+    textureMap["irradianceMap"] = std::make_unique<TextureCube>("irradianceMap", 32, 32);
+    textureMap["prefilterMap"] = std::make_unique<TextureCube>("prefilterMap", 128, 128, true);
+    textureMap["envCubemap"] = std::make_unique<TextureCube>("envCubemap");
 }
 
 void Application::SetupGUI() {
@@ -389,7 +556,7 @@ void Application::Run() {
         backgroundShader.use();
         backgroundShader.setMat4("projection", projection);
         backgroundShader.setMat4("view", view);
-        cube->Draw();
+        DrawCube();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -428,7 +595,6 @@ void Application::SetOpenGLState() {
 }
 
 void Application::PreBake() {
-    //环境光大多超过1.0范围，需要带浮点颜色缓冲的帧缓冲
     unsigned int captureFBO;
     unsigned int captureRBO;
     glGenFramebuffers(1, &captureFBO);
@@ -465,23 +631,24 @@ void Application::PreBake() {
     equirectangularToCubemapShader.setInt("equirectangularMap", 0);
     equirectangularToCubemapShader.setMat4("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, equirectangularMap->id);
+    glBindTexture(GL_TEXTURE_2D, textureMap["equirectangularMap"]->id);
 
     glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    auto& envCubemap = textureMap["envCubemap"];
     for (unsigned int i = 0; i < 6; ++i)
     {
         equirectangularToCubemapShader.setMat4("view", captureViews[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap->id, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cube->Draw();
+        DrawCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap->id);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-    //ibl-diffuse部分
+    //ibl-diffuse
     // PBR: create an irradiance cubemap, and re-scale capture FBO to irradiance scale.
     // --------------------------------------------------------------------------------
 
@@ -503,16 +670,16 @@ void Application::PreBake() {
     for (unsigned int i = 0; i < 6; ++i)
     {
         irradianceShader.setMat4("view", captureViews[i]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap->id, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, textureMap["irradianceMap"]->id, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cube->Draw();
+        DrawCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     //ibl-specular prefilter
     //PBR: create a prefilter cubemap and re-scale captureFbp to pre-filter scale
 
-    //PBR: 使用一个quasi-montecarlo(拟蒙特卡洛方法）模拟环境光创造
+    //PBR: using quasi-montecarlo to simulate 
     auto& prefilterShader = shaderMap["prefilterShader"];
     prefilterShader.use();
     prefilterShader.setInt("environmentMap", 0);
@@ -537,10 +704,10 @@ void Application::PreBake() {
         for (unsigned int i = 0; i < 6; ++i)
         {
             prefilterShader.setMat4("view", captureViews[i]);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap->id, mip);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, textureMap["prefilterMap"]->id, mip);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            cube->Draw();
+            DrawCube();
         }
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -553,12 +720,12 @@ void Application::PreBake() {
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLUTTexture->id, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureMap["brdfLUTTex"]->id, 0);
 
     glViewport(0, 0, 512, 512);
     shaderMap["brdfShader"].use();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    quad->Draw();
+    DrawCube();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

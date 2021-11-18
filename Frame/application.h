@@ -9,9 +9,15 @@
 #include <set>
 #include <map>
 #include <unordered_map>
+
+void DrawCube();
+void DrawQuad();
+void DrawSphere();
+void SetupMesh(unsigned int& VAO, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+
 class Application {
 
-private:
+ protected:
     // Window
     static const unsigned int wndWidth = 1280;
     static const unsigned int wndHeight = 720;
@@ -39,43 +45,27 @@ private:
     static bool firstMouse;
     static bool enterWindowFlag;
 
-private:
+protected:
     glm::mat4 view;
     glm::mat4 projection;
 
     typedef std::unique_ptr<Shader> Ptr;
 
     // Shaders
-    //Shader pbrShader;
-    //Shader equirectangularToCubemapShader;
-    //Shader backgroundShader;
-    //Shader irradianceShader;
-    //Shader prefilterShader;
-    //Shader brdfShader;
     std::unordered_map<std::string, Shader> shaderMap;
 
     // Models
     std::unique_ptr<Model> dragonModel;
 
-    typedef std::unique_ptr<Mesh> MeshPtr;
-    MeshPtr sphere;
-    MeshPtr quad;
-    MeshPtr cube;
+    //typedef std::unique_ptr<Mesh> MeshPtr;
+    //MeshPtr sphere;
+    //MeshPtr quad;
+    //MeshPtr cube;
+    std::unordered_map<std::string, std::unique_ptr<Model>> modelMap;
 
     // Textures
     typedef std::unique_ptr<Texture> TexturePtr;
-    TexturePtr wallAlbedoMap;
-    TexturePtr wallNormalMap;
-    TexturePtr wallMetallicMap;
-    TexturePtr wallRoughnessMap;
-    TexturePtr wallAOMap;
-
-    TexturePtr equirectangularMap;
-    TexturePtr brdfLUTTexture;
-    std::unique_ptr<TextureCube> envCubemap;
-    std::unique_ptr<TextureCube> irradianceMap;
-    std::unique_ptr<TextureCube> prefilterMap;
-
+    std::unordered_map<std::string, TexturePtr> textureMap;
 
 public:
     void ShowMonitor(bool* p_open);
@@ -84,19 +74,21 @@ public:
 
     bool InitializeWindow();
     bool InitGLAD();
-    void LoadResources();
-    void SetOpenGLState();
-
-    void PreBake();
-    void Run();
 
     void RenderGUI();
     void SetupGUI();
 
 public:
-    void LoadModels();
-    void LoadShaders();
-    void LoadTextures();
+    virtual void Run();
+
+protected:
+    virtual void PreBake();
+
+    virtual void SetOpenGLState();
+    virtual void LoadResources();
+    virtual void LoadModels();
+    virtual void LoadShaders();
+    virtual void LoadTextures();
 
 public:
     // Input

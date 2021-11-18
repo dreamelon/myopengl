@@ -21,6 +21,9 @@
     <ClCompile Include="main.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
+    <ClCompile Include="PBRApp.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\background.fs">
@@ -71,5 +74,10 @@
     <None Include="shaders\Phong.vs">
       <Filter>SourceFiles\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PBRApp.h">
+      <Filter>HeadFiles</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@
 #include <assimp\postprocess.h>
 
 #include "stb_image.h"
+#include <string>
 
 class Model {
 public:
@@ -19,7 +20,7 @@ public:
 
 private:
     std::vector<Mesh> meshes;
-
+    std::string name;
     void loadModel(std::string const path);
 
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);

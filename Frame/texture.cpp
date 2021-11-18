@@ -5,10 +5,10 @@
 
 // utility function for loading a 2D texture from file
 // ---------------------------------------------------
-Texture::Texture(char const* path, bool gammaCorrection)
+Texture::Texture(const char* texName, char const* path, bool gammaCorrection)
 {
+    name = texName;
     glGenTextures(1, &id);
-
     int width, height, nrComponents;
     unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
 
@@ -47,8 +47,9 @@ Texture::Texture(char const* path, bool gammaCorrection)
     }
 }
 
-Texture::Texture(char const* path) {
+Texture::Texture(const char* texName, char const* path) {
     stbi_set_flip_vertically_on_load(true);
+    name = texName;
     glGenTextures(1, &id);
     int width, height, nrComponents;
     float* data = stbi_loadf(path, &width, &height, &nrComponents, 0);
@@ -67,9 +68,9 @@ Texture::Texture(char const* path) {
     stbi_image_free(data);
 }
 
-Texture::Texture() {
+Texture::Texture(const char* texName) {
+    name = texName;
     glGenTextures(1, &id);
-
     // pre-allocate enough memory for the LUT texture.
     glBindTexture(GL_TEXTURE_2D, id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, 0);
@@ -81,9 +82,10 @@ Texture::Texture() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-TextureCube::TextureCube(unsigned int width, unsigned int height, bool mipmap) {
+TextureCube::TextureCube(const char* texName, unsigned int width, unsigned int height, bool mipmap) {
     // setup cubeMap 
     // ---------------------------------------------------------
+    name = texName;
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     for (unsigned int i = 0; i < 6; ++i)
