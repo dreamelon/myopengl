@@ -56,11 +56,6 @@ protected:
 
     // Models
     std::unique_ptr<Model> dragonModel;
-
-    //typedef std::unique_ptr<Mesh> MeshPtr;
-    //MeshPtr sphere;
-    //MeshPtr quad;
-    //MeshPtr cube;
     std::unordered_map<std::string, std::unique_ptr<Model>> modelMap;
 
     // Textures
@@ -79,16 +74,15 @@ public:
     void SetupGUI();
 
 public:
-    virtual void Run();
+    virtual void Run() = 0;
 
 protected:
-    virtual void PreBake();
 
-    virtual void SetOpenGLState();
-    virtual void LoadResources();
-    virtual void LoadModels();
-    virtual void LoadShaders();
-    virtual void LoadTextures();
+    virtual void SetOpenGLState() = 0;
+    virtual void LoadResources() = 0;
+    virtual void LoadModels() = 0;
+    virtual void LoadShaders() = 0;
+    virtual void LoadTextures() = 0;
 
 public:
     // Input

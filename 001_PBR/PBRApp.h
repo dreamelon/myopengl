@@ -7,7 +7,7 @@ public:
     virtual void Run();
 
 protected:
-    virtual void PreBake();
+    void PreBake();
 
     virtual void SetOpenGLState();
     virtual void LoadResources();

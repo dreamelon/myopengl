@@ -177,12 +177,12 @@
     <None Include="shaders\shadowmap.v" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PBRApp.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Frame\Frame.vcxproj">
       <Project>{723731a2-3a95-4c89-8b97-d3bdbc24ad4f}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="PBRApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
