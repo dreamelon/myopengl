@@ -13,7 +13,7 @@ void PBRApp::LoadResources() {
 void PBRApp::LoadModels() {
     // load models
     // -----------
-    dragonModel = std::make_unique<Model>("../Resources/dragon.obj");
+    modelMap["dragonModel"] = std::make_unique<Model>("dragonModel", "../Resources/dragon.obj");
 }
 
 void PBRApp::LoadShaders() {
@@ -85,8 +85,6 @@ void PBRApp::Run() {
     SetupGUI();
     PreBake();
     SetOpenGLState();
-    unsigned int sphereVAO = 0;
-    unsigned int indexCount;
     // lights
     // ------
     glm::vec3 lightPositions[] = {
@@ -152,7 +150,7 @@ void PBRApp::Run() {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-5.0, 0.0, 2.0));
         phongShader.setMat4("model", model);
-        dragonModel->Draw();
+        modelMap["dragonModel"]->Draw();
 
         // sphere
         //model = glm::mat4(1.0f);

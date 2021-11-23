@@ -12,7 +12,8 @@
 
 class Model {
 public:
-    Model(const char *path) {
+    Model(const char* modelName, const char *path) {
+        name = modelName;
         loadModel(path);
     }
     Model() = default;

@@ -1,8 +1,8 @@
-#include "application.h"
+#include "voxelApp.h"
 
 int main()
 {
-    Application app;
+    VoxelApp app;
     if (!app.Init())
         return -1;
     app.Run();

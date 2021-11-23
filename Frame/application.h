@@ -55,7 +55,6 @@ protected:
     std::unordered_map<std::string, Shader> shaderMap;
 
     // Models
-    std::unique_ptr<Model> dragonModel;
     std::unordered_map<std::string, std::unique_ptr<Model>> modelMap;
 
     // Textures

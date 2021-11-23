@@ -392,7 +392,3 @@ void Application::ShowMonitor(bool* p_open)
         ImGui::End();
     }
 }
-
-
-
-

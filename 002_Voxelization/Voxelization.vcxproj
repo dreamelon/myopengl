@@ -158,6 +158,11 @@
     <ClInclude Include="voxelApp.h" />
     <ClInclude Include="voxelization.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\voxelization.frag" />
+    <None Include="shaders\voxelization.geom" />
+    <None Include="shaders\voxelization.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
