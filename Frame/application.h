@@ -46,8 +46,6 @@ class Application {
     static bool enterWindowFlag;
 
 protected:
-    glm::mat4 view;
-    glm::mat4 projection;
 
     typedef std::unique_ptr<Shader> Ptr;
 

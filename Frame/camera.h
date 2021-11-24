@@ -12,12 +12,6 @@ enum Camera_Movement {
     PGDOWN
 };
 
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
-const float SPEED = 1.5f;
-const float SENSITIVITY = 0.1f;
-const float ZOOM = 45.0f;
-
 class Camera
 {
 public:
@@ -37,7 +31,7 @@ public:
     float MouseSensitivity;
     float Zoom;
 
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, -2.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix();

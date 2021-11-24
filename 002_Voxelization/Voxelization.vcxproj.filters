@@ -46,5 +46,17 @@
     <None Include="shaders\voxelization.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="shaders\background.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\background.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\voxelVisual.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\voxelVisual.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
