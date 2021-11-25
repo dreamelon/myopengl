@@ -53,3 +53,14 @@ class Cube : public Mesh {
 public:
     Cube();
 };
+
+class InstanceCube : public Cube {
+public:
+    InstanceCube() : Cube(), instanceVBO(0) {}
+
+    void DrawInstance(unsigned int count);
+    void SetupInstanceData(std::vector<glm::vec3>& pos);
+
+private:
+    unsigned int instanceVBO;
+};

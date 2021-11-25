@@ -39,8 +39,9 @@ void Mesh::setupMesh() {
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
 }
 
 Sphere::Sphere() {
@@ -151,6 +152,31 @@ Cube::Cube() {
         21, 20, 23
     };
     setupMesh();
+}
+
+void InstanceCube::DrawInstance(unsigned int count) {
+    glBindVertexArray(VAO);
+    glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, count);
+    glBindVertexArray(0);
+}
+
+void InstanceCube::SetupInstanceData(std::vector<glm::vec3>& pos) {
+
+    // store instance data in an array buffer
+    // --------------------------------------
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * pos.size(), &pos[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(VAO);
+    // instanced data
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(3, 1);
+    glBindVertexArray(0);
 }
 
 Quad::Quad() {

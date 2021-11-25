@@ -88,6 +88,10 @@ void VoxelApp::Run() {
             }
         }
     }
+
+    cube = std::make_unique<InstanceCube>();
+    cube->SetupInstanceData(pos);
+
     // render loop
     // -----------
     double lastTime = glfwGetTime();
@@ -119,9 +123,11 @@ void VoxelApp::Run() {
         glm::mat4 view = camera.GetViewMatrix();
         voxelVisual.setMat4("view", view);
         // dragon
-        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(0.1f);
         model = glm::translate(model, glm::vec3(0.0, 0.0, 5.0));
         voxelVisual.setMat4("model", model);
+        //cube->Draw();
+        cube->DrawInstance(pos.size());
         //modelMap["dragonModel"]->Draw();
 
         //auto& backgroundShader = shaderMap["backgroundShader"];

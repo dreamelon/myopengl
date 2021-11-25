@@ -14,6 +14,8 @@ void DrawCube();
 void DrawQuad();
 void DrawSphere();
 void SetupMesh(unsigned int& VAO, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+void DrawInstanceCube(unsigned int count);
+
 
 class Application {
 

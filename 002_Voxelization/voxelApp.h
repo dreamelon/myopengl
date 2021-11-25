@@ -6,10 +6,12 @@ public:
     virtual void Run();
 
 protected:
-
     virtual void SetOpenGLState();
     virtual void LoadResources();
     virtual void LoadModels();
     virtual void LoadShaders();
     virtual void LoadTextures();
+
+private:
+    std::unique_ptr<InstanceCube> cube;
 };
