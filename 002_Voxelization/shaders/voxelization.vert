@@ -11,5 +11,5 @@ out vec3 worldPos;
 void main()
 {
     worldPos = vec3(model * vec4(aPos, 1.0));
-    gl_Position =  projection * view * vec4(worldPos, 1.0);
+    gl_Position = vec4(worldPos, 1.0);
 }

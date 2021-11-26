@@ -59,7 +59,7 @@ public:
     InstanceCube() : Cube(), instanceVBO(0) {}
 
     void DrawInstance(unsigned int count);
-    void SetupInstanceData(std::vector<glm::vec3>& pos);
+    void SetupInstanceData(std::vector<glm::mat4>& pos);
 
 private:
     unsigned int instanceVBO;

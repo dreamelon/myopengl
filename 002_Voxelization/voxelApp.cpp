@@ -1,5 +1,6 @@
 #include "voxelApp.h"
 #include <glad/glad.h>
+#include <iostream>
 
 void VoxelApp::LoadModels() {
     // load models
@@ -28,7 +29,6 @@ void VoxelApp::SetOpenGLState() {
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     glViewport(0, 0, wndWidth, wndHeight);
 }
@@ -50,29 +50,41 @@ void VoxelApp::Run() {
     glGenBuffers(1, &cntBuffer);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, cntBuffer);
     glBufferData(GL_SHADER_STORAGE_BUFFER, size * sizeof(int), nullptr, GL_STATIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, cntBuffer);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, cntBuffer);
+
+    int* writePtr = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY));
+    for (int x = 0; x < size; ++x)
+    {
+        writePtr[x] = 0;
+    }
+
+    if (!glUnmapBuffer(GL_SHADER_STORAGE_BUFFER))
+        std::cout << "unMap error\n" << std::endl;
 
     glm::mat4 view = camera.GetViewMatrix();
     float length = resolution * 0.51f;
     glm::mat4 projection = glm::ortho(-length, +length, -length, +length, 0.1f, resolution * 1.2f);
-    glm::mat4 model = glm::mat4(50);
-    model = glm::translate(model, glm::vec3(0.0, -1.0, 5.0));
+    glm::mat4 model = glm::mat4();
+    model = glm::translate(model, glm::vec3(0.0, -1.0, 0.0));
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
     voxelShader.setMat4("view", view);
     voxelShader.setMat4("model", model);
     voxelShader.setMat4("projection", projection);
-    voxelShader.setVec3("Resolution", glm::vec3(resolution));
+    voxelShader.setInt("resolution", 256);
     voxelShader.setVec3("boxMin", glm::vec3(-length));
     // configure global OpenGL state
     // -----------------------------
     glDisable(GL_DEPTH_TEST);
     glClearColor(0.1f, 0.2f, 0.12f, 1.0f);
-    glViewport(0, 0, wndWidth, wndHeight);
+    glViewport(0, 0, resolution, resolution);
 
     modelMap["dragonModel"]->Draw();
+    // access violation and dont know reason
+    //glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, cntBuffer);
     int* ptr = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
     std::vector<glm::vec3> pos;
     std::vector<int> index;
@@ -89,15 +101,26 @@ void VoxelApp::Run() {
         }
     }
 
+    std::vector<glm::mat4> inst;
+    for (unsigned int x = 0; x < pos.size(); ++x)
+    {
+        glm::mat4 transf(1.0f);
+        transf = glm::translate(transf, pos[x]);
+        transf = glm::scale(transf, glm::vec3(0.1));
+        inst.push_back(transf);
+    }
+
     cube = std::make_unique<InstanceCube>();
-    cube->SetupInstanceData(pos);
+    cube->SetupInstanceData(inst);
 
     // render loop
     // -----------
     double lastTime = glfwGetTime();
     int frames = 0;
     glm::mat4 perspectivepProj = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 100.0f);
-    SetOpenGLState();
+    //SetOpenGLState();
+    glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, wndWidth, wndHeight);
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -123,12 +146,15 @@ void VoxelApp::Run() {
         glm::mat4 view = camera.GetViewMatrix();
         voxelVisual.setMat4("view", view);
         // dragon
-        glm::mat4 model = glm::mat4(0.1f);
-        model = glm::translate(model, glm::vec3(0.0, 0.0, 5.0));
+        glm::mat4 model = glm::mat4(10);
+        model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
         voxelVisual.setMat4("model", model);
         //cube->Draw();
-        cube->DrawInstance(pos.size());
-        //modelMap["dragonModel"]->Draw();
+        //cube->DrawInstance(pos.size());
+
+        model = glm::mat4(1);
+        voxelVisual.setMat4("model", model);
+        modelMap["dragonModel"]->Draw();
 
         //auto& backgroundShader = shaderMap["backgroundShader"];
         //backgroundShader.use();
