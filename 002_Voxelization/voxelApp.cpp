@@ -106,7 +106,7 @@ void VoxelApp::Run() {
     {
         glm::mat4 transf(1.0f);
         transf = glm::translate(transf, pos[x]);
-        transf = glm::scale(transf, glm::vec3(0.1));
+        transf = glm::scale(transf, glm::vec3(1));
         inst.push_back(transf);
     }
 
@@ -117,7 +117,7 @@ void VoxelApp::Run() {
     // -----------
     double lastTime = glfwGetTime();
     int frames = 0;
-    glm::mat4 perspectivepProj = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 100.0f);
+    glm::mat4 perspectivepProj = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 1000.0f);
     //SetOpenGLState();
     glDisable(GL_DEPTH_TEST);
     glViewport(0, 0, wndWidth, wndHeight);
@@ -146,15 +146,15 @@ void VoxelApp::Run() {
         glm::mat4 view = camera.GetViewMatrix();
         voxelVisual.setMat4("view", view);
         // dragon
-        glm::mat4 model = glm::mat4(10);
-        model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
+        glm::mat4 model = glm::mat4(1);
+        //model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
         voxelVisual.setMat4("model", model);
         //cube->Draw();
-        //cube->DrawInstance(pos.size());
+        cube->DrawInstance(pos.size());
 
         model = glm::mat4(1);
         voxelVisual.setMat4("model", model);
-        modelMap["dragonModel"]->Draw();
+        //modelMap["dragonModel"]->Draw();
 
         //auto& backgroundShader = shaderMap["backgroundShader"];
         //backgroundShader.use();
