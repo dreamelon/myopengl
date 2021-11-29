@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class Texture
 {
@@ -17,5 +18,6 @@ public:
 class TextureCube : public Texture{
 public:
     TextureCube(const char* texName, unsigned int width = 512, unsigned int height = 512, bool mipmap = false);
+    TextureCube(const char* texName, std::vector<std::string>& paths);
 };
 

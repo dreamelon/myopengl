@@ -21,7 +21,15 @@ void VoxelApp::LoadShaders() {
 }
 
 void VoxelApp::LoadTextures() {
-    textureMap["envCubemap"] = std::make_unique<TextureCube>("envCubemap");
+    std::vector<std::string> paths = {
+        "../Resources/SkyBox/skybox/right.jpg",
+        "../Resources/SkyBox/skybox/left.jpg",
+        "../Resources/SkyBox/skybox/top.jpg",
+        "../Resources/SkyBox/skybox/bottom.jpg",
+        "../Resources/SkyBox/skybox/front.jpg",
+        "../Resources/SkyBox/skybox/back.jpg",
+    };
+    textureMap["envCubemap"] = std::make_unique<TextureCube>("envCubemap", paths);
 }
 
 void VoxelApp::SetOpenGLState() {
@@ -44,7 +52,7 @@ void VoxelApp::Run() {
     SetupGUI();
     // SetOpenGLState();
 
-    unsigned int resolution = 256;
+    unsigned int resolution = 512;
     unsigned int size = resolution * resolution * resolution;
     unsigned int cntBuffer;
     glGenBuffers(1, &cntBuffer);
@@ -65,14 +73,14 @@ void VoxelApp::Run() {
     float length = resolution * 0.51f;
     glm::mat4 projection = glm::ortho(-length, +length, -length, +length, 0.1f, resolution * 1.2f);
     glm::mat4 model = glm::mat4();
-    model = glm::translate(model, glm::vec3(0.0, -1.0, 0.0));
+    model = glm::translate(model, glm::vec3(0.0, -0.8, 0.0));
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
     voxelShader.setMat4("view", view);
     voxelShader.setMat4("model", model);
     voxelShader.setMat4("projection", projection);
-    voxelShader.setInt("resolution", 256);
+    voxelShader.setInt("resolution", resolution);
     voxelShader.setVec3("boxMin", glm::vec3(-length));
     // configure global OpenGL state
     // -----------------------------
@@ -88,6 +96,7 @@ void VoxelApp::Run() {
     int* ptr = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
     std::vector<glm::vec3> pos;
     std::vector<int> index;
+    //resolution = resolution / 2;
     int halfRes = resolution / 2;
     if (ptr) {
         for (int i = 0; i < size; i++) {
@@ -106,20 +115,39 @@ void VoxelApp::Run() {
     {
         glm::mat4 transf(1.0f);
         transf = glm::translate(transf, pos[x]);
-        transf = glm::scale(transf, glm::vec3(1));
+        transf = glm::scale(transf, glm::vec3(0.5));
         inst.push_back(transf);
     }
 
     cube = std::make_unique<InstanceCube>();
     cube->SetupInstanceData(inst);
 
+    //while (!glfwWindowShouldClose(window))
+    //{
+    //    // input
+    //    // -----
+    //    processInput(window);
+
+    //    // render
+    //    glClearColor(0.1f, 0.2f, 0.12f, 1.0f);
+    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    //    modelMap["dragonModel"]->Draw();
+
+    //    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+    //    // -------------------------------------------------------------------------------
+    //    glfwSwapBuffers(window);
+    //    glfwPollEvents();
+    //}
+
     // render loop
     // -----------
     double lastTime = glfwGetTime();
     int frames = 0;
     glm::mat4 perspectivepProj = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 1000.0f);
+
     //SetOpenGLState();
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, wndWidth, wndHeight);
     while (!glfwWindowShouldClose(window))
     {
@@ -146,8 +174,8 @@ void VoxelApp::Run() {
         glm::mat4 view = camera.GetViewMatrix();
         voxelVisual.setMat4("view", view);
         // dragon
-        glm::mat4 model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
+        glm::mat4 model = glm::mat4(0.05);
+        model = glm::translate(model, glm::vec3(0.0, 0.0, 00));
         voxelVisual.setMat4("model", model);
         //cube->Draw();
         cube->DrawInstance(pos.size());
@@ -156,11 +184,12 @@ void VoxelApp::Run() {
         voxelVisual.setMat4("model", model);
         //modelMap["dragonModel"]->Draw();
 
-        //auto& backgroundShader = shaderMap["backgroundShader"];
-        //backgroundShader.use();
-        //backgroundShader.setMat4("projection", projection);
-        //backgroundShader.setMat4("view", view);
-        //DrawCube();
+        glDepthFunc(GL_LEQUAL);
+        auto& backgroundShader = shaderMap["backgroundShader"];
+        backgroundShader.use();
+        backgroundShader.setMat4("projection", perspectivepProj);
+        backgroundShader.setMat4("view", view);
+        DrawCube();
 
         double currTime = glfwGetTime();
         frames++;

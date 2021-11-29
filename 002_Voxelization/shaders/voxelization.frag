@@ -13,10 +13,10 @@ int step = 1;
 uniform int resolution;
 
 void main(){
-
-    uint x = int(worldPos.x * resolution + resolution / 2);
-    uint y = int(worldPos.y * resolution + resolution / 2);
-    uint z = int(worldPos.z * resolution + resolution / 2);
+    int res = resolution / 2;
+    uint x = int(worldPos.x * res+ res);
+    uint y = int(worldPos.y * res+ res);
+    uint z = int(worldPos.z * res+ res);
 
     uint index = z * (resolution * resolution) + y * resolution + x;
     atomicAdd(cnts[index], 1);
