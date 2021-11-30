@@ -20,5 +20,5 @@ void main(){
 
     uint index = z * (resolution * resolution) + y * resolution + x;
     atomicAdd(cnts[index], 1);
-    FragColor = vec4(worldPos.z, 0, 0, 1);
+    FragColor = vec4(1, 0, 0, 1);
 }

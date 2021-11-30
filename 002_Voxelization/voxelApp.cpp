@@ -52,7 +52,7 @@ void VoxelApp::Run() {
     SetupGUI();
     // SetOpenGLState();
 
-    unsigned int resolution = 512;
+    unsigned int resolution = 256;
     unsigned int size = resolution * resolution * resolution;
     unsigned int cntBuffer;
     glGenBuffers(1, &cntBuffer);
@@ -72,8 +72,12 @@ void VoxelApp::Run() {
     glm::mat4 view = camera.GetViewMatrix();
     float length = resolution * 0.51f;
     glm::mat4 projection = glm::ortho(-length, +length, -length, +length, 0.1f, resolution * 1.2f);
-    glm::mat4 model = glm::mat4();
-    model = glm::translate(model, glm::vec3(0.0, -0.8, 0.0));
+    glm::mat4 model = glm::mat4(1);
+    //model = glm::scale(model, glm::vec3(100));
+    model = glm::translate(model, glm::vec3(0.0, -0.8, 0));
+
+    glm::vec4 a(-1, 1, 1, 1);
+    auto b = projection * view * model * a;
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
@@ -114,8 +118,8 @@ void VoxelApp::Run() {
     for (unsigned int x = 0; x < pos.size(); ++x)
     {
         glm::mat4 transf(1.0f);
+        transf = glm::scale(transf, glm::vec3(0.25));
         transf = glm::translate(transf, pos[x]);
-        transf = glm::scale(transf, glm::vec3(0.5));
         inst.push_back(transf);
     }
 
@@ -132,8 +136,16 @@ void VoxelApp::Run() {
     //    glClearColor(0.1f, 0.2f, 0.12f, 1.0f);
     //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    //    modelMap["dragonModel"]->Draw();
+    //    //model = glm::translate(model, glm::vec3(0.0, -0.8, 0.0));
+    //    //voxelShader.setMat4("model", model);
+    //    //modelMap["dragonModel"]->Draw();
 
+    //    //model = glm::mat4(1);
+    //    //voxelShader.setMat4("model", model);
+
+    //    //view = camera.GetViewMatrix();
+    //    //voxelShader.setMat4("view", view);
+    //    cube->Draw();
     //    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     //    // -------------------------------------------------------------------------------
     //    glfwSwapBuffers(window);
@@ -174,8 +186,9 @@ void VoxelApp::Run() {
         glm::mat4 view = camera.GetViewMatrix();
         voxelVisual.setMat4("view", view);
         // dragon
-        glm::mat4 model = glm::mat4(0.05);
-        model = glm::translate(model, glm::vec3(0.0, 0.0, 00));
+        // first scale then rotation, translation
+        glm::mat4 model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0, 0.0, 100));
         voxelVisual.setMat4("model", model);
         //cube->Draw();
         cube->DrawInstance(pos.size());
