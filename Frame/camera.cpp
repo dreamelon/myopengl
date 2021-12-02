@@ -1,5 +1,6 @@
 #include "camera.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 const float YAW = 90.0f;
 const float PITCH = 0.0f;
@@ -13,6 +14,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up)
     Position = position;
     WorldUp = up;
     Up = up;
+    Right = cross(up, Front);
 }
 
 // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
@@ -23,7 +25,7 @@ glm::mat4 Camera::GetViewMatrix() {
 // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 {
-    float velocity = 10 * MovementSpeed * deltaTime;
+    float velocity = 100 * MovementSpeed * deltaTime;
     if (direction == FORWARD)
         Position += Front * velocity;
     if (direction == BACKWARD)
