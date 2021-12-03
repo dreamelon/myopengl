@@ -57,11 +57,11 @@ void VoxelApp::Run() {
     unsigned int cntBuffer;
     glGenBuffers(1, &cntBuffer);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, cntBuffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, size * sizeof(int), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, size / 8, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, cntBuffer);
 
     int* writePtr = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY));
-    for (int x = 0; x < size; ++x)
+    for (int x = 0; x < size / 32; ++x)
     {
         writePtr[x] = 0;
     }
@@ -96,20 +96,33 @@ void VoxelApp::Run() {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, cntBuffer);
     int* ptr = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
     std::vector<glm::vec3> pos;
-    std::vector<int> index;
-    //resolution = resolution / 2;
+
     int halfRes = resolution / 2;
     if (ptr) {
-        for (int i = 0; i < size; i++) {
-            if (*(ptr+i)) {
-                int z = i / (resolution * resolution) - halfRes;
-                int y = (i % (resolution * resolution)) / resolution - halfRes;
-                int x = (i % (resolution * resolution)) % resolution - halfRes;
-                pos.push_back(glm::vec3(x, y, z));
-                index.push_back(i);
+        for (int i = 0; i < size / 32; i++) {
+            for (int indexInInt = 0; indexInInt < 32; indexInInt++) {
+                if ((*(ptr + i) & (1<<indexInInt)) != 0) {
+                    int indexInVoxel = i * 32 + indexInInt;
+                    int z = indexInVoxel / (resolution * resolution) - halfRes;
+                    int y = (indexInVoxel % (resolution * resolution)) / resolution - halfRes;
+                    int x = (indexInVoxel % (resolution * resolution)) % resolution - halfRes;
+                    pos.push_back(glm::vec3(x, y, z));
+                }
             }
         }
     }
+
+    //if (ptr) {
+    //    for (int i = 0; i < size; i++) {
+    //        if (*(ptr + i)) {
+    //            int z = i / (resolution * resolution) - halfRes;
+    //            int y = (i % (resolution * resolution)) / resolution - halfRes;
+    //            int x = (i % (resolution * resolution)) % resolution - halfRes;
+    //            pos.push_back(glm::vec3(x, y, z));
+    //            index.push_back(i);
+    //        }
+    //    }
+    //}
 
     std::vector<glm::mat4> inst;
     for (unsigned int x = 0; x < pos.size(); ++x)

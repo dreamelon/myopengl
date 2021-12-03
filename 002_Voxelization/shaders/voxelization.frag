@@ -24,10 +24,10 @@ void main(){
 
     int index = z * (resolution * resolution) + y * resolution + x;
 
-//    int bit = z >> 5;
-//    int bitIndex = z & ((1 << 5)-1);
-//    atomicOr(cnts[bit], 1<<bitIndex);
+    int bit = z >> 5;
+    int bitIndex = z & ((1 << 5)-1);
+    atomicOr(cnts[bit], 1<<bitIndex);
 
-    atomicAdd(cnts[index], 1);
+    //atomicAdd(cnts[index], 1);
     FragColor = vec4(modelPosFrag, 1);
 }
