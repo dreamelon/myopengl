@@ -11,7 +11,7 @@ void VoxelApp::LoadModels() {
 void VoxelApp::LoadShaders() {
     // build and compile shaders
     // -------------------------
-    shaderMap["voxelization"] = Shader("voxelization", "shaders/voxelization.vert", "shaders/voxelization.frag");
+    shaderMap["voxelization"] = Shader("voxelization", "shaders/voxelization.vert", "shaders/voxelization.frag", "shaders/voxelization.geom");
     shaderMap["voxelVisual"] = Shader("voxelVisual", "shaders/voxelVisual.vert", "shaders/voxelVisual.frag");
     shaderMap["backgroundShader"] = Shader("backgroundShader", "shaders/background.vert", "shaders/background.frag");
     auto& backgroundShader = shaderMap["backgroundShader"];
@@ -73,8 +73,8 @@ void VoxelApp::Run() {
     float length = resolution * 0.51f;
     glm::mat4 projection = glm::ortho(-length, +length, -length, +length, 0.1f, resolution * 1.2f);
     glm::mat4 model = glm::mat4(1);
-    model = glm::translate(model, glm::vec3(0, -10, 200));
-    model = glm::scale(model, glm::vec3(200));
+    model = glm::translate(model, glm::vec3(0, -0.8, 0));
+    model = glm::scale(model, glm::vec3(1));
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
@@ -88,7 +88,7 @@ void VoxelApp::Run() {
     glDisable(GL_DEPTH_TEST);
     glClearColor(0.1f, 0.2f, 0.12f, 1.0f);
     glViewport(0, 0, resolution, resolution);
-
+    glDisable(GL_CULL_FACE);
     modelMap["dragonModel"]->Draw();
     // access violation and dont know reason
     //glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
@@ -116,7 +116,7 @@ void VoxelApp::Run() {
     {
         glm::mat4 transf(1.0f);
         transf = glm::translate(transf, pos[x]);
-        transf = glm::scale(transf, glm::vec3(0.25));
+        transf = glm::scale(transf, glm::vec3(1));
         inst.push_back(transf);
     }
 
