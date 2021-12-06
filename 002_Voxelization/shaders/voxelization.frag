@@ -24,8 +24,8 @@ void main(){
 
     int index = z * (resolution * resolution) + y * resolution + x;
 
-    int bit = z >> 5;
-    int bitIndex = z & ((1 << 5)-1);
+    int bit = index >> 5;
+    int bitIndex = index & ((1 << 5)-1);
     atomicOr(cnts[bit], 1<<bitIndex);
 
     //atomicAdd(cnts[index], 1);

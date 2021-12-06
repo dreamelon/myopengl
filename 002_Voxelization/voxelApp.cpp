@@ -119,7 +119,6 @@ void VoxelApp::Run() {
     //            int y = (i % (resolution * resolution)) / resolution - halfRes;
     //            int x = (i % (resolution * resolution)) % resolution - halfRes;
     //            pos.push_back(glm::vec3(x, y, z));
-    //            index.push_back(i);
     //        }
     //    }
     //}
