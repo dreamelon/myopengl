@@ -53,6 +53,7 @@ void VoxelApp::Run() {
     // SetOpenGLState();
 
     unsigned int resolution = 512;
+    int halfRes = resolution / 2;
     unsigned int size = resolution * resolution * resolution;
     unsigned int cntBuffer;
     glGenBuffers(1, &cntBuffer);
@@ -69,20 +70,31 @@ void VoxelApp::Run() {
     if (!glUnmapBuffer(GL_SHADER_STORAGE_BUFFER))
         std::cout << "unMap error\n" << std::endl;
 
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 viewZ = glm::lookAt(glm::vec3(0, 0, -halfRes), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+    glm::mat4 viewY = glm::lookAt(glm::vec3(0, -halfRes, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1));
+    glm::mat4 viewX = glm::lookAt(glm::vec3(-halfRes, 0, 0), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0));
+
     float length = resolution * 0.51f;
-    glm::mat4 projection = glm::ortho(-length, +length, -length, +length, 0.1f, resolution * 1.2f);
+    glm::mat4 projection = glm::ortho(-length, +length, -length, +length, -float(halfRes), float(halfRes));
     glm::mat4 model = glm::mat4(1);
-    model = glm::translate(model, glm::vec3(0, -0.8, 0));
-    model = glm::scale(model, glm::vec3(1));
+    model = glm::translate(model, glm::vec3(-100, -100, -100));
+    model = glm::scale(model, glm::vec3(100));
+
+    auto a = glm::vec4(-1, 1, 1, 1);
+    auto a1 = glm::vec4(-1, 1, 0, 1);
+    auto b = projection * viewY * model * a;
+    auto b1 = projection * viewY * model * a1;
+    auto c = projection * viewZ * model * a;
+    auto c1 = projection * viewZ * model * a1;
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
-    voxelShader.setMat4("view", view);
+    voxelShader.setMat4("viewX", viewX);
+    voxelShader.setMat4("viewY", viewY);
+    voxelShader.setMat4("viewZ", viewZ);
     voxelShader.setMat4("model", model);
     voxelShader.setMat4("projection", projection);
     voxelShader.setInt("resolution", resolution);
-    voxelShader.setVec3("boxMin", glm::vec3(-length));
     // configure global OpenGL state
     // -----------------------------
     glDisable(GL_DEPTH_TEST);
@@ -97,7 +109,6 @@ void VoxelApp::Run() {
     int* ptr = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
     std::vector<glm::vec3> pos;
 
-    int halfRes = resolution / 2;
     if (ptr) {
         for (int i = 0; i < size / 32; i++) {
             for (int indexInInt = 0; indexInInt < 32; indexInInt++) {
@@ -152,8 +163,9 @@ void VoxelApp::Run() {
 
     //    //model = glm::translate(model, glm::vec3(0.0, -0.8, 0.0));
     //    //voxelShader.setMat4("model", model);
-    //    view = camera.GetViewMatrix();
-    //    voxelShader.setMat4("view", view);
+    //    voxelShader.setMat4("viewX", viewX);
+    //    voxelShader.setMat4("viewY", viewY);
+    //    voxelShader.setMat4("viewZ", viewZ);
     //    modelMap["dragonModel"]->Draw();
     //    //cube->Draw();
 

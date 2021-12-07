@@ -7,20 +7,20 @@ layout (std430, binding = 1) buffer CountBuffer{
 };
 
 in vec3 modelPosFrag;
+in vec3 worldPosFrag;
 
-uniform vec3 boxMin;
-int step = 1;
 uniform int resolution;
 
 void main(){
     int res = resolution / 2;
-//    uint x = int(gl_FragCoord.x);
-//    uint y = int(gl_FragCoord.y);
-//    uint z = int(gl_FragCoord.z * res + res);
+//    int x = int(gl_FragCoord.x);
+//    int y = int(gl_FragCoord.y);
+//    int z = int(gl_FragCoord.z * res + res);
 
-    int x = int(modelPosFrag.x * res + res);
-    int y = int(modelPosFrag.y * res + res);
-    int z = int(modelPosFrag.z * res + res);
+
+    int x = int(modelPosFrag.x * 150 + 150);
+    int y = int(modelPosFrag.y * 150 + 150);
+    int z = int(modelPosFrag.z * 150 + 150);
 
     int index = z * (resolution * resolution) + y * resolution + x;
 
