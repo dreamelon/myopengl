@@ -80,13 +80,6 @@ void VoxelApp::Run() {
     model = glm::translate(model, glm::vec3(-100, -100, -100));
     model = glm::scale(model, glm::vec3(100));
 
-    auto a = glm::vec4(-1, 1, 1, 1);
-    auto a1 = glm::vec4(-1, 1, 0, 1);
-    auto b = projection * viewY * model * a;
-    auto b1 = projection * viewY * model * a1;
-    auto c = projection * viewZ * model * a;
-    auto c1 = projection * viewZ * model * a1;
-
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
     voxelShader.setMat4("viewX", viewX);
@@ -98,6 +91,7 @@ void VoxelApp::Run() {
     // configure global OpenGL state
     // -----------------------------
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
     glClearColor(0.1f, 0.2f, 0.12f, 1.0f);
     glViewport(0, 0, resolution, resolution);
     glDisable(GL_CULL_FACE);
@@ -180,6 +174,13 @@ void VoxelApp::Run() {
     double lastTime = glfwGetTime();
     int frames = 0;
     glm::mat4 perspectivepProj = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 1000.0f);
+
+    //auto a = glm::vec4(0, 0, 0, 1);
+    //auto a1 = glm::vec4(-1, 1, 0, 1);
+    //auto b = projection * viewZ * a;
+    //auto b1 = projection * viewY * model * a1;
+    //auto c = projection * viewZ * model * a;
+    //auto c1 = projection * viewZ * model * a1;
 
     //SetOpenGLState();
     glEnable(GL_DEPTH_TEST);

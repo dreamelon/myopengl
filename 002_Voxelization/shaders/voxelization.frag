@@ -18,9 +18,9 @@ void main(){
 //    int z = int(gl_FragCoord.z * res + res);
 
 
-    int x = int(modelPosFrag.x * 150 + 150);
-    int y = int(modelPosFrag.y * 150 + 150);
-    int z = int(modelPosFrag.z * 150 + 150);
+    int x = int(worldPosFrag.x + res);
+    int y = int(worldPosFrag.y + res);
+    int z = int(worldPosFrag.z + res);
 
     int index = z * (resolution * resolution) + y * resolution + x;
 
