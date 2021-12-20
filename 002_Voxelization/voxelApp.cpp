@@ -133,7 +133,7 @@ void VoxelApp::Run() {
     {
         glm::mat4 transf(1.0f);
         transf = glm::translate(transf, pos[x]);
-        transf = glm::scale(transf, glm::vec3(1));
+        transf = glm::scale(transf, glm::vec3(0.5));
         inst.push_back(transf);
     }
 
@@ -214,7 +214,6 @@ void VoxelApp::Run() {
         glm::mat4 model = glm::mat4(1);
         model = glm::translate(model, glm::vec3(0.0, 0.0, 100));
         voxelVisual.setMat4("model", model);
-        //cube->Draw();
         cube->DrawInstance(pos.size());
 
         model = glm::mat4(1);

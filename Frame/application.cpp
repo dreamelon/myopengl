@@ -210,7 +210,7 @@ void DrawSphere() {
             oddRow = !oddRow;
         }
         sphereIndexCount = indices.size();
-        SetupMesh(cubeVAO, vertices, indices);
+        SetupMesh(sphereVAO, vertices, indices);
     }
     glBindVertexArray(sphereVAO);
     glDrawElements(GL_TRIANGLE_STRIP, sphereIndexCount, GL_UNSIGNED_INT, 0);

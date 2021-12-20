@@ -64,3 +64,14 @@ public:
 private:
     unsigned int instanceVBO;
 };
+
+class InstanceSphere : public Sphere {
+public:
+    InstanceSphere() : Sphere(), instanceVBO(0) {}
+
+    void DrawInstance(unsigned int count);
+    void SetupInstanceData(std::vector<glm::mat4>& pos);
+
+private:
+    unsigned int instanceVBO;
+};

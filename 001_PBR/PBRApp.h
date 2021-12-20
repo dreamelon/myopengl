@@ -14,4 +14,7 @@ protected:
     virtual void LoadModels();
     virtual void LoadShaders();
     virtual void LoadTextures();
+
+protected:
+    std::unique_ptr<Sphere> sphere;
 };

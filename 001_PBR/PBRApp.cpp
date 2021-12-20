@@ -4,6 +4,7 @@
 #include "IMGUI/imgui_impl_glfw.h"
 #include "IMGUI/imgui_impl_opengl3.h"
 #include <iostream>
+
 void PBRApp::LoadResources() {
     LoadModels();
     LoadTextures();
@@ -14,6 +15,7 @@ void PBRApp::LoadModels() {
     // load models
     // -----------
     modelMap["dragonModel"] = std::make_unique<Model>("dragonModel", "../Resources/dragon.obj");
+    sphere = std::make_unique<Sphere>();
 }
 
 void PBRApp::LoadShaders() {
@@ -29,7 +31,6 @@ void PBRApp::LoadShaders() {
 
     auto& backgroundShader = shaderMap["backgroundShader"];
     backgroundShader.use();
-    backgroundShader.setMat4("view", view);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureMap["envCubemap"]->id);
 
@@ -150,14 +151,12 @@ void PBRApp::Run() {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0, -1.0, 5.0));
         phongShader.setMat4("model", model);
-        modelMap["dragonModel"]->Draw();
+        //modelMap["dragonModel"]->Draw();
 
-        // sphere
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(3.0, 0.0, 2.0));
-        //pbrShader.setMat4("model", model);
-        //sphere->Draw();
-
+        //// sphere
+        //model = glm::mat4(0.1f);
+        //DrawSphere();
+        sphere->Draw();
         auto& backgroundShader = shaderMap["backgroundShader"];
         backgroundShader.use();
         backgroundShader.setMat4("projection", projection);
