@@ -53,7 +53,6 @@ void VoxelApp::Run() {
     // SetOpenGLState();
 
     unsigned int resolution = 512;
-    int halfRes = resolution / 2;
     unsigned int size = resolution * resolution * resolution;
     unsigned int cntBuffer;
     glGenBuffers(1, &cntBuffer);
@@ -70,21 +69,21 @@ void VoxelApp::Run() {
     if (!glUnmapBuffer(GL_SHADER_STORAGE_BUFFER))
         std::cout << "unMap error\n" << std::endl;
 
-    glm::mat4 viewZ = glm::lookAt(glm::vec3(0, 0, -halfRes), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
-    glm::mat4 viewY = glm::lookAt(glm::vec3(0, -halfRes, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1));
-    glm::mat4 viewX = glm::lookAt(glm::vec3(-halfRes, 0, 0), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0));
+    float halfRes = resolution / 2;
+    glm::mat4 viewZ = glm::lookAt(glm::vec3(0, 0, halfRes), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+    glm::mat4 viewY = glm::lookAt(glm::vec3(0, halfRes, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1));
+    glm::mat4 viewX = glm::lookAt(glm::vec3(halfRes, 0, 0), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0));
 
-    float length = resolution * 0.51f;
-    glm::mat4 projection = glm::ortho(-length, +length, -length, +length, -float(halfRes), float(halfRes));
+    glm::mat4 projection = glm::ortho(-halfRes, +halfRes, -halfRes, +halfRes, -halfRes, halfRes);
     glm::mat4 model = glm::mat4(1);
     model = glm::translate(model, glm::vec3(-100, -100, -100));
     model = glm::scale(model, glm::vec3(100));
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
-    voxelShader.setMat4("viewX", viewX);
-    voxelShader.setMat4("viewY", viewY);
-    voxelShader.setMat4("viewZ", viewZ);
+    voxelShader.setMat4("view[0]", viewX);
+    voxelShader.setMat4("view[1]", viewY);
+    voxelShader.setMat4("view[2]", viewZ);
     voxelShader.setMat4("model", model);
     voxelShader.setMat4("projection", projection);
     voxelShader.setInt("resolution", resolution);
@@ -175,12 +174,12 @@ void VoxelApp::Run() {
     int frames = 0;
     glm::mat4 perspectivepProj = glm::perspective(glm::radians(camera.Zoom), (float)wndWidth / (float)wndHeight, 0.1f, 1000.0f);
 
-    //auto a = glm::vec4(0, 0, 0, 1);
-    //auto a1 = glm::vec4(-1, 1, 0, 1);
-    //auto b = projection * viewZ * a;
-    //auto b1 = projection * viewY * model * a1;
-    //auto c = projection * viewZ * model * a;
-    //auto c1 = projection * viewZ * model * a1;
+    auto a = glm::vec4(0, 0, 0, 1);
+    auto a1 = glm::vec4(-10, 121331, 0, 1);
+    auto b = projection * viewZ * a;
+    auto b1 = projection * viewZ * a1;
+    auto c = projection * viewZ * model * a;
+    auto c1 = projection * viewZ * model * a1;
 
     //SetOpenGLState();
     glEnable(GL_DEPTH_TEST);
