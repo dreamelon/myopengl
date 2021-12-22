@@ -6,6 +6,8 @@ layout (triangle_strip, max_vertices = 3) out;
 uniform mat4 projection;
 uniform mat4 view[3];
 
+uniform mat4 viewProjectionsI[3];
+
 in vec3 worldPosGeom[];
 in vec3 modelPosGeom[];
 
@@ -48,7 +50,9 @@ vec4 CalcAABB(vec4 pos[3]){
 
 void main()
 {
-    mat4 view = view[CalculateAxis()];
+    int index = CalculateAxis();
+    mat4 view = view[index];
+    mat4 viewProjectionI = viewProjectionsI[index];
 
     vec4 pos[3] = vec4[3]
     (
@@ -60,8 +64,11 @@ void main()
 
     vec4 trianglePlane;
     trianglePlane.xyz = normalize(cross(pos[1].xyz - pos[0].xyz, pos[2].xyz - pos[0].xyz));
-    // the triangle is counterclockwise relative to the camera direction 
+    // the w represent the distance between the triangle and origin
     trianglePlane.w = -dot(pos[0].xyz, trianglePlane.xyz);
+
+    if(trianglePlane.z == 0.0f) 
+        return;
 
     if( dot(trianglePlane.xyz, vec3(0.0, 0.0, 1.0)) < 0.0 ){
         vec4 tmpVert = pos[2];
@@ -69,10 +76,10 @@ void main()
         pos[1] = tmpVert;
     }
 
-    vec2 halfPixel = vec2(1.f / 512);
-    vec3 plane0 = cross(pos[1].xyw - pos[0].xyw, pos[0].xyw);
-    vec3 plane1 = cross(pos[2].xyw - pos[1].xyw, pos[1].xyw);
-    vec3 plane2 = cross(pos[0].xyw - pos[2].xyw, pos[2].xyw);
+    vec2 halfPixel = vec2(1.f / 256);
+    vec3 plane0 = cross(pos[0].xyw - pos[2].xyw, pos[2].xyw);
+    vec3 plane1 = cross(pos[1].xyw - pos[0].xyw, pos[0].xyw);
+    vec3 plane2 = cross(pos[2].xyw - pos[1].xyw, pos[1].xyw);
     // (a, b) * x + c = 0;
     // c' = c - V * (a, b)
     // move line along with the vector V
@@ -80,10 +87,27 @@ void main()
     plane1.z = -dot(halfPixel, abs(plane1.xy));
     plane2.z = -dot(halfPixel, abs(plane2.xy));
 
+    vec3 intersection0 = cross(plane0, plane1);
+    vec3 intersection1 = cross(plane1, plane2);
+    vec3 intersection2 = cross(plane2, plane0);
+    intersection0 /= intersection0.z;
+    intersection1 /= intersection1.z;
+    intersection2 /= intersection2.z;
+
+    float z[3];
+    z[0] = -(trianglePlane.x * intersection0.x + trianglePlane.y * intersection0.y + trianglePlane.w) / trianglePlane.z;
+    z[1] = -(trianglePlane.x * intersection1.x + trianglePlane.y * intersection1.y + trianglePlane.w) / trianglePlane.z;
+    z[2] = -(trianglePlane.x * intersection2.x + trianglePlane.y * intersection2.y + trianglePlane.w) / trianglePlane.z;
+    pos[0].xyz = vec3(intersection0.xy, z[0]);
+    pos[1].xyz = vec3(intersection1.xy, z[1]);
+    pos[2].xyz = vec3(intersection2.xy, z[2]);
+
     for(int i=0; i<3; i++){
-        gl_Position = projection * view * gl_in[i].gl_Position;
-        //gl_Position = vec4(gl_in[i].gl_Position.xy, 0, 1);
-        worldPosFrag = worldPosGeom[i];
+        gl_Position = pos[i];
+        //gl_Position = projection * view * gl_in[i].gl_Position;
+        vec4 voxelPos = viewProjectionI * pos[i];
+        voxelPos.xyz /= voxelPos.w;
+        worldPosFrag = voxelPos.xyz;
         modelPosFrag = modelPosGeom[i];
         EmitVertex();
     }

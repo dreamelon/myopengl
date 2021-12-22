@@ -75,8 +75,9 @@ void VoxelApp::Run() {
     glm::mat4 viewX = glm::lookAt(glm::vec3(halfRes, 0, 0), glm::vec3(1, 0, 0), glm::vec3(0, 1, 0));
 
     glm::mat4 projection = glm::ortho(-halfRes, +halfRes, -halfRes, +halfRes, -halfRes, halfRes);
+
     glm::mat4 model = glm::mat4(1);
-    model = glm::translate(model, glm::vec3(-100, -100, -100));
+    model = glm::translate(model, glm::vec3(100, 100, 100));
     model = glm::scale(model, glm::vec3(100));
 
     auto& voxelShader = shaderMap["voxelization"];
@@ -84,6 +85,9 @@ void VoxelApp::Run() {
     voxelShader.setMat4("view[0]", viewX);
     voxelShader.setMat4("view[1]", viewY);
     voxelShader.setMat4("view[2]", viewZ);
+    voxelShader.setMat4("viewProjectionsI[0]", glm::inverse(projection * viewX));
+    voxelShader.setMat4("viewProjectionsI[1]", glm::inverse(projection * viewY));
+    voxelShader.setMat4("viewProjectionsI[2]", glm::inverse(projection * viewZ));
     voxelShader.setMat4("model", model);
     voxelShader.setMat4("projection", projection);
     voxelShader.setInt("resolution", resolution);
@@ -156,9 +160,9 @@ void VoxelApp::Run() {
 
     //    //model = glm::translate(model, glm::vec3(0.0, -0.8, 0.0));
     //    //voxelShader.setMat4("model", model);
-    //    voxelShader.setMat4("viewX", viewX);
-    //    voxelShader.setMat4("viewY", viewY);
-    //    voxelShader.setMat4("viewZ", viewZ);
+    //    voxelShader.setMat4("view[0]", viewX);
+    //    voxelShader.setMat4("view[1]", viewY);
+    //    voxelShader.setMat4("view[2]", viewZ);
     //    modelMap["dragonModel"]->Draw();
     //    //cube->Draw();
 
@@ -211,7 +215,7 @@ void VoxelApp::Run() {
         // dragon
         // first scale then rotation, translation
         glm::mat4 model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(0.0, 0.0, 100));
+        model = glm::translate(model, glm::vec3(0.0, 0.0, -400));
         voxelVisual.setMat4("model", model);
         cube->DrawInstance(pos.size());
 
