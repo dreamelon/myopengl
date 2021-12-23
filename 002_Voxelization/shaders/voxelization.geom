@@ -13,8 +13,10 @@ in vec3 modelPosGeom[];
 
 out vec3 worldPosFrag;
 out vec3 modelPosFrag;
-out vec3 voxelPos;
+out vec2 dilatedPos;
 out vec4 triangleAABB;
+
+vec2 halfPixel = vec2(1.f / 256);
 
 int CalculateAxis(){
     vec3 p1 = gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz;
@@ -36,17 +38,14 @@ int CalculateAxis(){
 vec4 CalcAABB(vec4 pos[3]){
 
     vec4 bbox;
-    bbox.xy= max(pos[0].xy, max(pos[1].xy, pos[2].xy));
-    bbox.zw= min(pos[0].xy, min(pos[1].xy, pos[2].xy));
+    bbox.xy= min(pos[0].xy, min(pos[1].xy, pos[2].xy));
+    bbox.zw= max(pos[0].xy, max(pos[1].xy, pos[2].xy));
+
+    bbox.xy -= halfPixel;
+    bbox.zw += halfPixel;
 
     return bbox;
 }
-
-//    float A01 = gl_in[1].gl_Position.y - gl_in[0].gl_Position.y;
-//    float B01 = gl_in[0].gl_Position.x - gl_in[1].gl_Position.x;
-//    float C01 = A01 * gl_in[0].gl_Position.x + B01 * gl_in[0].gl_Position.y;
-//
-//    C01 = C01 - dot(abs(vec2(A01, B01)), vec2(1, 1));
 
 void main()
 {
@@ -76,42 +75,72 @@ void main()
         pos[1] = tmpVert;
     }
 
-    vec2 halfPixel = vec2(1.f / 256);
+    float A01 = pos[1].y - pos[0].y;
+    float B01 = pos[0].x - pos[1].x;
+    float C01 = pos[1].x * pos[0].y - pos[0].x * pos[1].y;
+
+    float A12 = pos[2].y - pos[1].y;
+    float B12 = pos[1].x - pos[2].x;
+    float C12 = pos[2].x * pos[1].y - pos[1].x * pos[2].y;
+
+    float A20 = pos[0].y - pos[2].y;
+    float B20 = pos[2].x - pos[0].x;
+    float C20 = pos[0].x * pos[2].y - pos[2].x * pos[0].y;
+
+    C01 -= dot(abs(vec2(A01, B01)), halfPixel);
+    C12 -= dot(abs(vec2(A12, B12)), halfPixel);
+    C20 -= dot(abs(vec2(A20, B20)), halfPixel);
+
+//    vec2 intersection[3];
+//    intersection[0].y = (C01 * A20 - C20 * A01) / (A01 * B20 - A20 * B01);
+//    intersection[0].x = (C20 * B01 - C01 * B20) / (A01 * B20 - A20 * B01);
+//
+//    intersection[1].y = (C12 * A01 - C01 * A12) / (A12 * B01 - A01 * B12);
+//    intersection[1].x = (C20 * B01 - C01 * B20) / (A12 * B01 - A01 * B12);
+//
+//    intersection[2].y = (C20 * A12 - C12 * A20) / (A20 * B12 - A12 * B20);
+//    intersection[2].x = (C12 * B20 - C20 * B12) / (A20 * B12 - A12 * B20);
+//
+//    pos[0].xy = intersection[0];
+//    pos[1].xy = intersection[1];
+//    pos[2].xy = intersection[2];
+
     vec3 plane0 = cross(pos[0].xyw - pos[2].xyw, pos[2].xyw);
     vec3 plane1 = cross(pos[1].xyw - pos[0].xyw, pos[0].xyw);
     vec3 plane2 = cross(pos[2].xyw - pos[1].xyw, pos[1].xyw);
     // (a, b) * x + c = 0;
     // c' = c - V * (a, b)
     // move line along with the vector V
-    plane0.z = -dot(halfPixel, abs(plane0.xy));
-    plane1.z = -dot(halfPixel, abs(plane1.xy));
-    plane2.z = -dot(halfPixel, abs(plane2.xy));
+    plane0.z -= dot(halfPixel, abs(plane0.xy));
+    plane1.z -= dot(halfPixel, abs(plane1.xy));
+    plane2.z -= dot(halfPixel, abs(plane2.xy));
 
-    vec3 intersection0 = cross(plane0, plane1);
-    vec3 intersection1 = cross(plane1, plane2);
-    vec3 intersection2 = cross(plane2, plane0);
-    intersection0 /= intersection0.z;
-    intersection1 /= intersection1.z;
-    intersection2 /= intersection2.z;
+    vec3 intersection[3];
+    intersection[0] = cross(plane0, plane1);
+    intersection[1] = cross(plane1, plane2);
+    intersection[2] = cross(plane2, plane0);
+    intersection[0] /= intersection[0].z;
+    intersection[1] /= intersection[1].z;
+    intersection[2] /= intersection[2].z;
 
     float z[3];
-    z[0] = -(trianglePlane.x * intersection0.x + trianglePlane.y * intersection0.y + trianglePlane.w) / trianglePlane.z;
-    z[1] = -(trianglePlane.x * intersection1.x + trianglePlane.y * intersection1.y + trianglePlane.w) / trianglePlane.z;
-    z[2] = -(trianglePlane.x * intersection2.x + trianglePlane.y * intersection2.y + trianglePlane.w) / trianglePlane.z;
-    pos[0].xyz = vec3(intersection0.xy, z[0]);
-    pos[1].xyz = vec3(intersection1.xy, z[1]);
-    pos[2].xyz = vec3(intersection2.xy, z[2]);
+    z[0] = -(trianglePlane.x * intersection[0].x + trianglePlane.y * intersection[0].y + trianglePlane.w) / trianglePlane.z;
+    z[1] = -(trianglePlane.x * intersection[1].x + trianglePlane.y * intersection[1].y + trianglePlane.w) / trianglePlane.z;
+    z[2] = -(trianglePlane.x * intersection[2].x + trianglePlane.y * intersection[2].y + trianglePlane.w) / trianglePlane.z;
+    pos[0].xyz = vec3(intersection[0].xy, z[0]);
+    pos[1].xyz = vec3(intersection[1].xy, z[1]);
+    pos[2].xyz = vec3(intersection[2].xy, z[2]);
 
     for(int i=0; i<3; i++){
         gl_Position = pos[i];
-        //gl_Position = projection * view * gl_in[i].gl_Position;
-        vec4 voxelPos = viewProjectionI * pos[i];
-        voxelPos.xyz /= voxelPos.w;
-        worldPosFrag = voxelPos.xyz;
+        dilatedPos = pos[i].xy;
+        worldPosFrag = vec3(viewProjectionI * pos[i]);
         modelPosFrag = modelPosGeom[i];
         EmitVertex();
     }
     EndPrimitive();
+}
+
 
 //    if(normal.x >= normal.y && normal.x >= normal.z){
 //        for(int i=0; i<3; i++){
@@ -137,4 +166,3 @@ void main()
 //        }
 //        EndPrimitive();
 //    }
-}

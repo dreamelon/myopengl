@@ -8,15 +8,22 @@ layout (std430, binding = 1) buffer CountBuffer{
 
 in vec3 modelPosFrag;
 in vec3 worldPosFrag;
+in vec4 triangleAABB;
+in vec2 dilatedPos;
 
 uniform int resolution;
 
 void main(){
+    if(dilatedPos.x < triangleAABB.x || dilatedPos.x > triangleAABB.z || 
+        dilatedPos.y < triangleAABB.y || dilatedPos.y > triangleAABB.w)
+    {
+        discard;
+    }
+
     int res = resolution / 2;
 //    int x = int(gl_FragCoord.x);
 //    int y = int(gl_FragCoord.y);
 //    int z = int(gl_FragCoord.z * res + res);
-
 
     int x = int(worldPosFrag.x + res);
     int y = int(worldPosFrag.y + res);
