@@ -4,7 +4,7 @@ layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
 uniform mat4 projection;
-uniform mat4 view[3];
+uniform mat4 views[3];
 
 uniform mat4 viewProjectionsI[3];
 
@@ -16,7 +16,7 @@ out vec3 modelPosFrag;
 out vec2 dilatedPos;
 out vec4 triangleAABB;
 
-vec2 halfPixel = vec2(1.f / 256);
+vec2 halfPixel = vec2(1.f / 1024);
 
 int CalculateAxis(){
     vec3 p1 = gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz;
@@ -49,8 +49,9 @@ vec4 CalcAABB(vec4 pos[3]){
 
 void main()
 {
+
     int index = CalculateAxis();
-    mat4 view = view[index];
+    mat4 view = views[index];
     mat4 viewProjectionI = viewProjectionsI[index];
 
     vec4 pos[3] = vec4[3]
@@ -59,6 +60,7 @@ void main()
         projection * view * gl_in[1].gl_Position,
         projection * view * gl_in[2].gl_Position
     );
+
     triangleAABB = CalcAABB(pos);
 
     vec4 trianglePlane;
@@ -91,37 +93,38 @@ void main()
     C12 -= dot(abs(vec2(A12, B12)), halfPixel);
     C20 -= dot(abs(vec2(A20, B20)), halfPixel);
 
-//    vec2 intersection[3];
-//    intersection[0].y = (C01 * A20 - C20 * A01) / (A01 * B20 - A20 * B01);
-//    intersection[0].x = (C20 * B01 - C01 * B20) / (A01 * B20 - A20 * B01);
-//
-//    intersection[1].y = (C12 * A01 - C01 * A12) / (A12 * B01 - A01 * B12);
-//    intersection[1].x = (C20 * B01 - C01 * B20) / (A12 * B01 - A01 * B12);
-//
-//    intersection[2].y = (C20 * A12 - C12 * A20) / (A20 * B12 - A12 * B20);
-//    intersection[2].x = (C12 * B20 - C20 * B12) / (A20 * B12 - A12 * B20);
-//
-//    pos[0].xy = intersection[0];
-//    pos[1].xy = intersection[1];
-//    pos[2].xy = intersection[2];
+    vec2 intersection[3];
+    intersection[0].y = (C01 * A20 - C20 * A01) / (A01 * B20 - A20 * B01);
+    intersection[0].x = (C20 * B01 - C01 * B20) / (A01 * B20 - A20 * B01);
 
-    vec3 plane0 = cross(pos[0].xyw - pos[2].xyw, pos[2].xyw);
-    vec3 plane1 = cross(pos[1].xyw - pos[0].xyw, pos[0].xyw);
-    vec3 plane2 = cross(pos[2].xyw - pos[1].xyw, pos[1].xyw);
-    // (a, b) * x + c = 0;
-    // c' = c - V * (a, b)
-    // move line along with the vector V
-    plane0.z -= dot(halfPixel, abs(plane0.xy));
-    plane1.z -= dot(halfPixel, abs(plane1.xy));
-    plane2.z -= dot(halfPixel, abs(plane2.xy));
+    intersection[1].y = (C12 * A01 - C01 * A12) / (A12 * B01 - A01 * B12);
+    intersection[1].x = (C20 * B01 - C01 * B20) / (A12 * B01 - A01 * B12);
 
-    vec3 intersection[3];
-    intersection[0] = cross(plane0, plane1);
-    intersection[1] = cross(plane1, plane2);
-    intersection[2] = cross(plane2, plane0);
-    intersection[0] /= intersection[0].z;
-    intersection[1] /= intersection[1].z;
-    intersection[2] /= intersection[2].z;
+    intersection[2].y = (C20 * A12 - C12 * A20) / (A20 * B12 - A12 * B20);
+    intersection[2].x = (C12 * B20 - C20 * B12) / (A20 * B12 - A12 * B20);
+
+    intersection[0] /= C01;
+    intersection[1] /= C12;
+    intersection[2] /= C20;
+
+//    vec3 plane[3];
+//    plane[0] = cross(pos[0].xyw - pos[2].xyw, pos[2].xyw);
+//    plane[1] = cross(pos[1].xyw - pos[0].xyw, pos[0].xyw);
+//    plane[2] = cross(pos[2].xyw - pos[1].xyw, pos[1].xyw);
+//    // (a, b) * x + c = 0;
+//    // c' = c - V * (a, b)
+//    // move line along with the vector V
+//    plane[0].z -= dot(halfPixel, abs(plane[0].xy));
+//    plane[1].z -= dot(halfPixel, abs(plane[1].xy));
+//    plane[2].z -= dot(halfPixel, abs(plane[2].xy));
+//
+//    vec3 intersection[3];
+//    intersection[0] = cross(plane[0], plane[1]);
+//    intersection[1] = cross(plane[1], plane[2]);
+//    intersection[2] = cross(plane[2], plane[0]);
+//    intersection[0] /= intersection[0].z;
+//    intersection[1] /= intersection[1].z;
+//    intersection[2] /= intersection[2].z;
 
     float z[3];
     z[0] = -(trianglePlane.x * intersection[0].x + trianglePlane.y * intersection[0].y + trianglePlane.w) / trianglePlane.z;

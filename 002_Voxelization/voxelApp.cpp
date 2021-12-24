@@ -82,9 +82,9 @@ void VoxelApp::Run() {
 
     auto& voxelShader = shaderMap["voxelization"];
     voxelShader.use();
-    voxelShader.setMat4("view[0]", viewX);
-    voxelShader.setMat4("view[1]", viewY);
-    voxelShader.setMat4("view[2]", viewZ);
+    voxelShader.setMat4("views[0]", viewX);
+    voxelShader.setMat4("views[1]", viewY);
+    voxelShader.setMat4("views[2]", viewZ);
     voxelShader.setMat4("viewProjectionsI[0]", glm::inverse(projection * viewX));
     voxelShader.setMat4("viewProjectionsI[1]", glm::inverse(projection * viewY));
     voxelShader.setMat4("viewProjectionsI[2]", glm::inverse(projection * viewZ));
